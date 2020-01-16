@@ -138,8 +138,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BiLanguage.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="USprache.cpp" />
+    <ClCompile Include="ULanguage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EncryptCommand.h" />

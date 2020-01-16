@@ -6,14 +6,14 @@
 // Adds an 'U' to the beginning of a word, if the word starts with
 // a vocal it replaces it with an 'U'.
 
-class USprache : public EncryptCommand
+class ULanguage : public EncryptCommand
 {
 	public:
 
 		std::string Encode(std::string* toEncode)
 		{
 			bool wordStart = true;
-			std::list<char> text;
+			std::string output;
 
 			for (std::string::size_type i = 0; i < toEncode->length(); ++i) 
 			{
@@ -24,29 +24,20 @@ class USprache : public EncryptCommand
 					if (charIsVocal(&toEncode->at(i)))
 					{
 						if (isupper(toEncode->at(i)))
-							text.push_back('U');
+							output.append("U");
 						else
-							text.push_back('u');
+							output.append("u");
 
 						continue;
 					}
-					text.push_back('U');
+					output.append("U");
 				}
 				else if (isspace(toEncode->at(i)))
 					wordStart = true;
 				
-				text.push_back(tolower(toEncode->at(i)));
-			}
+				char temp = (char)(tolower(toEncode->at(i)));
 
-			std::string output;
-			output.reserve(text.size());
-
-			// store size now as it will change with each iteration
-			int textSize = text.size();
-			for (size_t i = 0; i < textSize; i++)
-			{
-				output.push_back(text.front());
-				text.pop_front();
+				output.append(std::string(&temp));
 			}
 
 			return output;
@@ -54,21 +45,21 @@ class USprache : public EncryptCommand
 	
 		std::string EncodeFromeFile(const char* filePath)
 		{
-			std::string text;
+			std::string output;
 
 			std::ifstream in(filePath, std::ios::in | std::ios::binary);
 			if (in)
 			{
 				in.seekg(0, std::ios::end);
-				text.resize(in.tellg());
+				output.resize(in.tellg());
 				in.seekg(0, std::ios::beg);
-				in.read(&text[0], text.size());
+				in.read(&output[0], output.size());
 				in.close();
 			}
 			else
 				std::cout << "Could not open file !" << std::endl;
 
-			return Encode(&text);
+			return Encode(&output);
 		}
 	
 		std::string Decode(std::string* toDecode)
