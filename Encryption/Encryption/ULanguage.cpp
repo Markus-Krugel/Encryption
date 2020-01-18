@@ -1,5 +1,4 @@
 #include "EncryptCommand.h"
-#include <list>
 #include <iostream>
 
 

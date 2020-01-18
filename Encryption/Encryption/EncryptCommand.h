@@ -6,9 +6,9 @@ class EncryptCommand
 {
 	public:
 		std::string Encode(std::string* toEncode);
-		std::string EncodeFromeFile(std::string* filePath);
+		std::string EncodeFromeFile(const char* filePath);
 		std::string Decode(std::string* toDecode);
-		std::string DecodeFromeFile(std::string* filePath);
+		std::string DecodeFromeFile(const char* filePath);
 	
 	protected:
 		char vocals[5]{ 'a','e','i','o','u' };

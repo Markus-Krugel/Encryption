@@ -2,9 +2,10 @@
 #include <iostream>
 
 
-// Adds a 'bi' after every vocal.
+// Replaces letters with the letter from the other side of the alphabet.
+// e.g 'A' with 'Z' and 'G' with 'T'
 
-class BiLanguage : public EncryptCommand
+class Atbash : public EncryptCommand
 {
 	public:
 	
@@ -14,12 +15,19 @@ class BiLanguage : public EncryptCommand
 	
 			for (std::string::size_type i = 0; i < toEncode->length(); ++i)
 			{
-				output.push_back(toEncode->at(i));
-	
-				if (charIsVocal(&toEncode->at(i)))
+				if (isalpha(toEncode->at(i)))
 				{
-					output.append("bi");
+					for (size_t j = 0; j < alphabet.length(); j++)
+					{
+						if (toupper(toEncode->at(i)) == alphabet[j])
+						{
+							output.push_back(reverseAlphabet.at(j));
+							break;
+						}
+					}
 				}
+				else
+					output.push_back(toEncode->at(i));
 			}
 	
 			return output;
@@ -53,5 +61,9 @@ class BiLanguage : public EncryptCommand
 		{
 			return "";
 		}
+
+	private:
+		std::string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		std::string reverseAlphabet = "ZYXWVUTSRQPONMLKJIHGFEDCBA";
 };
 

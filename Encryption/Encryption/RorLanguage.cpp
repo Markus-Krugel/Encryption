@@ -2,9 +2,9 @@
 #include <iostream>
 
 
-// Adds a 'bi' after every vocal.
+// Adds an 'o' after every consonant and repeats the consonant.
 
-class BiLanguage : public EncryptCommand
+class RorLanguage : public EncryptCommand
 {
 	public:
 	
@@ -16,9 +16,11 @@ class BiLanguage : public EncryptCommand
 			{
 				output.push_back(toEncode->at(i));
 	
-				if (charIsVocal(&toEncode->at(i)))
+				if (isalpha(toEncode->at(i)) && !charIsVocal(&toEncode->at(i)))
 				{
-					output.append("bi");
+					output.append("o");
+					// lower letter because it does look less obvious if word starts with consonant
+					output.push_back(tolower(toEncode->at(i)));
 				}
 			}
 	

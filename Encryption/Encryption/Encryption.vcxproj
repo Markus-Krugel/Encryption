@@ -138,9 +138,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Atbasch.cpp" />
+    <ClCompile Include="BaconCode.cpp" />
     <ClCompile Include="BiLanguage.cpp" />
+    <ClCompile Include="Ceaser.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="PolybiosCode.cpp" />
+    <ClCompile Include="RorLanguage.cpp" />
     <ClCompile Include="ULanguage.cpp" />
+    <ClCompile Include="VigenereCipher.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EncryptCommand.h" />
