@@ -53,24 +53,32 @@ class VigenereCipher
 				}
 			}
 
-			// count the non alphabetical chars, so that we only advance the codeword if it is an alphabetical char
-			int countNonAlpha = 0;
+			// stores the position of the codeword so that you dont enocode non alpha chars
+			int codePosition = 0;
 
 			for (std::string::size_type i = 0; i < toEncode->length(); ++i)
 			{
 				if (isalpha(toEncode->at(i)))
 				{
-					int temp = (i - countNonAlpha) % (codeToInt.size() - 1);
-					int position = encodeToInt[i] + codeToInt[temp];
+					int position = encodeToInt[i] + codeToInt[codePosition];
 
-					if (position > alphabet.length())
+					if (position >= alphabet.length())
 						position = position - alphabet.length();
-					output.push_back(alphabet[position]);
+
+					// Ensures that the correct letter case is used
+					if(isupper(toEncode->at(i)))
+						output.push_back(alphabet[position]);
+					else
+						output.push_back(tolower(alphabet[position]));
+
+					if (codePosition == codeToInt.size() - 1)
+						codePosition = 0;
+					else
+						codePosition++;
 				}
 				else
 				{
 					output.push_back(toEncode->at(i));
-					countNonAlpha++;
 				}
 			}
 	

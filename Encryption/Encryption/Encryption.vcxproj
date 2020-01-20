@@ -145,6 +145,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="PolybiosCode.cpp" />
     <ClCompile Include="RorLanguage.cpp" />
+    <ClCompile Include="Transposition.cpp" />
     <ClCompile Include="ULanguage.cpp" />
     <ClCompile Include="VigenereCipher.cpp" />
   </ItemGroup>

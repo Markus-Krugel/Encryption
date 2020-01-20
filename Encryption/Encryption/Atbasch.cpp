@@ -21,8 +21,11 @@ class Atbash : public EncryptCommand
 					{
 						if (toupper(toEncode->at(i)) == alphabet[j])
 						{
-							output.push_back(reverseAlphabet.at(j));
-							break;
+							// Ensures that the correct letter case is used
+							if (isupper(toEncode->at(i)))
+								output.push_back(reverseAlphabet[j]);
+							else
+								output.push_back(tolower(reverseAlphabet[j]));
 						}
 					}
 				}
@@ -52,14 +55,29 @@ class Atbash : public EncryptCommand
 			return Encode(&text);
 		}
 	
+		// its the same procedure as encoding
 		std::string Decode(std::string* toDecode)
 		{
-			return "";
+			return Encode(toDecode);
 		}
 	
-		std::string DecodeFromeFile(std::string* filePath)
+		std::string DecodeFromeFile(const char* filePath)
 		{
-			return "";
+			std::string text;
+
+			std::ifstream in(filePath, std::ios::in | std::ios::binary);
+			if (in)
+			{
+				in.seekg(0, std::ios::end);
+				text.resize(in.tellg());
+				in.seekg(0, std::ios::beg);
+				in.read(&text[0], text.size());
+				in.close();
+			}
+			else
+				std::cout << "Could not open file !" << std::endl;
+
+			return Decode(&text);
 		}
 
 	private:

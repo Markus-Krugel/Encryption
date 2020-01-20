@@ -8,11 +8,15 @@
 #include "Ceaser.cpp"
 #include "BaconCode.cpp"
 #include "VigenereCipher.cpp"
+#include "Transposition.cpp"
 
 int main()
 {
-	VigenereCipher encrpyt;
+	Caeser encrpyt;
 
-	std::cout << encrpyt.Encode(&std::string("a simple example"), &std::string("battista")) << std::endl;
+	//std::cout << encrpyt.Encode(&std::string("Dies ist ein Beispielssatz.")) << std::endl;
 	//std::cout << encrpyt.EncodeFromeFile("encrypted.txt") << std::endl;
+
+	std::cout << encrpyt.Decode(&std::string("Glhv lvw hlq Ehlvslhovvdwc.")) << std::endl;
+	std::cout << encrpyt.DecodeFromeFile("decrypted.txt") << std::endl;
 }

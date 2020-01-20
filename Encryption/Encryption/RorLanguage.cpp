@@ -48,12 +48,41 @@ class RorLanguage : public EncryptCommand
 	
 		std::string Decode(std::string* toDecode)
 		{
-			return "";
+			std::string output;
+
+			for (std::string::size_type i = 0; i < toDecode->length(); ++i)
+			{
+				output.push_back(toDecode->at(i));
+
+				if (isalpha(toDecode->at(i)) && !charIsVocal(&toDecode->at(i)))
+				{
+					if (toDecode->at(i + 1) == 'o' && tolower(toDecode->at(i)) == toDecode->at(i + 2))
+						i += 2;
+					else
+						return "Algorithm not applicable";
+				}
+			}
+
+			return output;
 		}
 	
-		std::string DecodeFromeFile(std::string* filePath)
+		std::string DecodeFromeFile(const char* filePath)
 		{
-			return "";
+			std::string text;
+
+			std::ifstream in(filePath, std::ios::in | std::ios::binary);
+			if (in)
+			{
+				in.seekg(0, std::ios::end);
+				text.resize(in.tellg());
+				in.seekg(0, std::ios::beg);
+				in.read(&text[0], text.size());
+				in.close();
+			}
+			else
+				std::cout << "Could not open file !" << std::endl;
+
+			return Decode(&text);
 		}
 };
 
