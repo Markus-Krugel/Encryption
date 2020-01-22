@@ -72,8 +72,10 @@ class Caeser : public EncryptCommand
 						if (toupper(toDecode->at(i)) == alphabet[j])
 						{
 							// if it extends the last letter of the alphabet, change to the start of the alphabet
-							if ((j - 3) < 0)
-								output.push_back(alphabet[alphabet.size() - (j - 3)]);
+							int temp = j - 3;
+
+							if (temp < 0)
+								output.push_back(alphabet[alphabet.size() + temp]);
 							else
 								output.push_back(alphabet[(j - 3)]);
 
@@ -106,7 +108,7 @@ class Caeser : public EncryptCommand
 			else
 				std::cout << "Could not open file !" << std::endl;
 
-			return Encode(&text);
+			return Decode(&text);
 		}
 
 	private:

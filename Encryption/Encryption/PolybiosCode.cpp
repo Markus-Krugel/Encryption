@@ -65,12 +65,52 @@ class PolybiosCode : public EncryptCommand
 	
 		std::string Decode(std::string* toDecode)
 		{
-			return "";
+			std::string output;
+
+			for (size_t i = 0; i < toDecode->length(); i++)
+			{
+				if(isalpha(toDecode->at(i)))
+					return "Algorithm not applicable";
+
+				if (isdigit(toDecode->at(i)) && isdigit(toDecode->at(i + 1)))
+				{
+					// the -'0' casts the char into an int otherwise it would read the ascii code
+					int position = (((toDecode->at(i) - '0') - 1) * 5) + (toDecode->at(i + 1) - '0') - 1;
+					if (position > 8)
+						position++;
+
+					// As i and j share the same cell it can be either i or j therefore we present both options
+					if (position == 8)
+						output.append("(i/j)");
+					else
+						output.push_back(alphabet[position]);
+
+					i++;
+				}
+				else
+					output.push_back(toDecode->at(i));
+			}
+
+			return output;
 		}
 	
-		std::string DecodeFromeFile(std::string* filePath)
+		std::string DecodeFromeFile(const char* filePath)
 		{
-			return "";
+			std::string text;
+
+			std::ifstream in(filePath, std::ios::in | std::ios::binary);
+			if (in)
+			{
+				in.seekg(0, std::ios::end);
+				text.resize(in.tellg());
+				in.seekg(0, std::ios::beg);
+				in.read(&text[0], text.size());
+				in.close();
+			}
+			else
+				std::cout << "Could not open file !" << std::endl;
+
+			return Decode(&text);
 		}
 	
 	private:

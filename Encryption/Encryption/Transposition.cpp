@@ -38,8 +38,13 @@ class Transposition
 	
 		std::string EncodeFromeFile(const char* filePath)
 		{
+			return EncodeFromeFile(filePath, 5);
+		}
+
+		std::string EncodeFromeFile(const char* filePath, int optional)
+		{
 			std::string text;
-	
+
 			std::ifstream in(filePath, std::ios::in | std::ios::binary);
 			if (in)
 			{
@@ -51,18 +56,72 @@ class Transposition
 			}
 			else
 				std::cout << "Could not open file !" << std::endl;
-	
-			return Encode(&text);
+
+			return Encode(&text, optional);
+		}
+
+		std::string Decode(std::string* filePath)
+		{
+			return Decode(filePath, 5);
 		}
 	
-		std::string Decode(std::string* toDecode)
+		std::string Decode(std::string* toDecode, int optional)
 		{
-			return "";
+			std::string output;
+			output.resize(toDecode->length());
+
+			int groupSize = ceil((double)toDecode->length() / optional);
+
+			// There are possibly some columns which have one char less, as there aren't enough chars
+			int countColumnsWithLessChar = toDecode->length() % optional;
+
+			int extra = 0;
+
+			for (int i = 0; i < toDecode->length(); i++)
+			{
+				int group = i / groupSize;
+				int position = 0;
+
+				//if(countColumnsWithLessChar < group)
+				//	position = group + ((i % (groupSize)) * optional);
+				//else
+					position = group + (((i + extra) % groupSize) * optional);
+				
+				if(position >= toDecode->length())
+				{
+					extra ++;
+					position = countColumnsWithLessChar + extra;
+				}
+
+				std::cout << position << std::endl;
+				output[position] = toDecode->at(i);
+			}
+
+			return output;
 		}
 	
-		std::string DecodeFromeFile(std::string* filePath)
+		std::string DecodeFromeFile(const char* filePath)
 		{
-			return "";
+			return DecodeFromeFile(filePath, 5);
+		}
+
+		std::string DecodeFromeFile(const char* filePath, int optional)
+		{
+			std::string text;
+
+			std::ifstream in(filePath, std::ios::in | std::ios::binary);
+			if (in)
+			{
+				in.seekg(0, std::ios::end);
+				text.resize(in.tellg());
+				in.seekg(0, std::ios::beg);
+				in.read(&text[0], text.size());
+				in.close();
+			}
+			else
+				std::cout << "Could not open file !" << std::endl;
+
+			return Decode(&text, optional);
 		}
 };
 
