@@ -12,12 +12,13 @@
 
 int main()
 {
-	Transposition encrpyt;
+	VigenereCipher encrpyt;
 
-	//std::cout << encrpyt.Encode(&std::string("Dies ist ein Beispielssatz.")) << std::endl;
-	//std::cout << encrpyt.EncodeFromeFile("encrypted.txt") << std::endl;
+	//std::cout << encrpyt.Encode(&std::string("Dies ist ein Beispielssatz."), &std::string("Hello")) << std::endl;
+	//std::cout << encrpyt.EncodeFromeFile("encrypted.txt", &std::string("Hello")) << std::endl;
 
-	std::cout << encrpyt.Decode(&std::string("Diiilzisnss.et pss Bia eeet")) << std::endl;
-	//std::cout << encrpyt.DecodeFromeFile("decrypted.txt") << std::endl;
+	std::cout << encrpyt.Decode(&std::string("Kmpd wzx ptb Iitddpiwdghxk."), &std::string("Hello")) << std::endl;
+	std::cout << encrpyt.DecodeFromeFile("decrypted.txt", &std::string("Hello")) << std::endl;
+
 }
 

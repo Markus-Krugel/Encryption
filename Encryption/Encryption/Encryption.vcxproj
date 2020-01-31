@@ -148,6 +148,7 @@
     <ClCompile Include="Transposition.cpp" />
     <ClCompile Include="ULanguage.cpp" />
     <ClCompile Include="VigenereCipher.cpp" />
+    <ClCompile Include="WordHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EncryptCommand.h" />

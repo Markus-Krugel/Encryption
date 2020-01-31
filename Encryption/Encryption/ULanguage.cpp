@@ -36,7 +36,7 @@ class ULanguage : public EncryptCommand
 				
 				char temp = (char)(tolower(toEncode->at(i)));
 
-				output.append(std::string(&temp));
+				output.push_back(temp);
 			}
 
 			return output;
@@ -63,12 +63,52 @@ class ULanguage : public EncryptCommand
 	
 		std::string Decode(std::string* toDecode)
 		{
-			return "";
+			std::string output;
+			bool wordStart = true;
+
+			for (size_t i = 0; i < toDecode->length(); i++)
+			{
+				if (wordStart && tolower(toDecode->at(i)) == tolower('u'))
+				{
+					// As it is impossible to find out if the U replaced a vocal, therefore
+					// we give the vocals as a possible answer
+					if (islower(toDecode->at(i)))
+						output.append("(a/e/i/o/u)");
+					else
+						output.append("(A/E/I/O/U)");
+
+					wordStart = false;
+
+					continue;
+				}
+				else if (wordStart && tolower(toDecode->at(i)) != tolower('u'))
+					return "Algorithm not applicable";
+				else if (isspace(toDecode->at(i)))
+					wordStart = true;
+
+				output.push_back(toDecode->at(i));
+			}
+
+			return output;
 		}
 	
-		std::string DecodeFromeFile(std::string* filePath)
+		std::string DecodeFromeFile(const char* filePath)
 		{
-			return "";
+			std::string text;
+
+			std::ifstream in(filePath, std::ios::in | std::ios::binary);
+			if (in)
+			{
+				in.seekg(0, std::ios::end);
+				text.resize(in.tellg());
+				in.seekg(0, std::ios::beg);
+				in.read(&text[0], text.size());
+				in.close();
+			}
+			else
+				std::cout << "Could not open file !" << std::endl;
+
+			return Decode(&text);
 		}
 };
 

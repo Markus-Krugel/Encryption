@@ -72,14 +72,14 @@ class Transposition
 
 			int groupSize = ceil((double)toDecode->length() / optional);
 
-			// There are possibly some columns which have one char less, as there aren't enough chars
-			int countColumnsWithLessChar = toDecode->length() % optional;
+			// There are possibly some columns which have one more char, as there aren't enough chars for thre remaining columns
+			int countColumnsWithExtraChar = toDecode->length() % optional;
 
 			int extra = 0;
 
 			for (int i = 0; i < toDecode->length(); i++)
 			{
-				int group = i / groupSize;
+				int group = (i + extra) / groupSize;
 				int position = 0;
 
 				//if(countColumnsWithLessChar < group)
@@ -90,10 +90,9 @@ class Transposition
 				if(position >= toDecode->length())
 				{
 					extra ++;
-					position = countColumnsWithLessChar + extra;
+					position = countColumnsWithExtraChar + extra;
 				}
 
-				std::cout << position << std::endl;
 				output[position] = toDecode->at(i);
 			}
 
