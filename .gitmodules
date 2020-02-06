@@ -1,0 +1,6 @@
+[submodule "Encrpytion/Encryption/vendor/imgui"]
+	path = Encrpytion/Encryption/vendor/imgui
+	url = https://github.com/gallickgunner/ImGui-Addons
+[submodule "Encryption/Encryption/vendor/imgui"]
+	path = Encryption/Encryption/vendor/imgui
+	url = https://github.com/gallickgunner/ImGui-Addons
