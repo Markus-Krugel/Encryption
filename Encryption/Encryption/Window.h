@@ -1,8 +1,13 @@
 #pragma once
 
+#include <glad.h>
+#include <iostream>
 #include "Windows.h"
-#include "vendor/glad/include/glad/glad.h"
-#include "vendor/glfw/include/glfw3.h"
+#include "glad.h"
+#include "glfw3.h"
+#include "imgui.h"
+#include "vendor/imgui/examples/imgui_impl_glfw.h"
+#include "vendor/imgui/examples/imgui_impl_opengl3.h"
 #include <string>
 #include <functional>
 
@@ -48,6 +53,9 @@ private:
 		unsigned int Width, Height;
 		bool VSync;
 	};
+
+	void DrawEncryptionWindow();
+	void DrawHelpWindow();
 
 	WindowData m_Data;
 };

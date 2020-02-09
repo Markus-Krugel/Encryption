@@ -71,15 +71,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(ProjectDir)vendor\portable-file-dialogs-master;$(ProjectDir)vendor\glad\include\KHR;$(ProjectDir)vendor\glad\include\glad;$(ProjectDir)vendor\glfw\include;$(ProjectDir)vendor\imgui;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(ProjectDir)vendor\portable-file-dialogs-master;$(ProjectDir)vendor\glad\include\KHR;$(ProjectDir)vendor\glad\include\glad;$(ProjectDir)vendor\glfw\include;$(ProjectDir)vendor\imgui;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(ProjectDir)vendor\portable-file-dialogs-master;$(ProjectDir)vendor\glad\include\KHR;$(ProjectDir)vendor\glad\include\glad;$(ProjectDir)vendor\glfw\include;$(ProjectDir)vendor\imgui;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(ProjectDir)vendor\portable-file-dialogs-master;$(ProjectDir)vendor\glad\include\KHR;$(ProjectDir)vendor\glad\include\glad;$(ProjectDir)vendor\glfw\include;$(ProjectDir)vendor\imgui;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -87,7 +91,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)vendor\glad\include\KHR;$(ProjectDir)vendor\glad\include\glad;$(ProjectDir)vendor\glfw\include;$(ProjectDir)vendor\imgui</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -101,7 +104,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)vendor\glad\include\KHR;$(ProjectDir)vendor\glad\include\glad;$(ProjectDir)vendor\glfw\include;$(ProjectDir)vendor\imgui</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -117,7 +119,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)vendor\glad\include\KHR;$(ProjectDir)vendor\glad\include\glad;$(ProjectDir)vendor\glfw\include;$(ProjectDir)vendor\imgui</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -135,7 +136,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)vendor\glad\include\KHR;$(ProjectDir)vendor\glad\include\glad;$(ProjectDir)vendor\glfw\include;$(ProjectDir)vendor\imgui</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -156,6 +156,12 @@
     <ClCompile Include="Transposition.cpp" />
     <ClCompile Include="ULanguage.cpp" />
     <ClCompile Include="vendor\glad\src\glad.c" />
+    <ClCompile Include="vendor\imgui\examples\imgui_impl_glfw.cpp" />
+    <ClCompile Include="vendor\imgui\examples\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="vendor\imgui\imgui.cpp" />
+    <ClCompile Include="vendor\imgui\imgui_demo.cpp" />
+    <ClCompile Include="vendor\imgui\imgui_draw.cpp" />
+    <ClCompile Include="vendor\imgui\imgui_widgets.cpp" />
     <ClCompile Include="VigenereCipher.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WordHelper.cpp" />
@@ -166,8 +172,15 @@
     <ClInclude Include="vendor\glad\include\KHR\khrplatform.h" />
     <ClInclude Include="vendor\glfw\include\GLFW\glfw3.h" />
     <ClInclude Include="vendor\glfw\include\GLFW\glfw3native.h" />
+    <ClInclude Include="vendor\imgui\examples\imgui_impl_glfw.h" />
+    <ClInclude Include="vendor\imgui\examples\imgui_impl_opengl3.h" />
     <ClInclude Include="vendor\imgui\FileBrowser\Dirent\dirent.h" />
-    <ClInclude Include="vendor\imgui\FileBrowser\ImGuiFileBrowser.h" />
+    <ClInclude Include="vendor\imgui\imconfig.h" />
+    <ClInclude Include="vendor\imgui\imgui.h" />
+    <ClInclude Include="vendor\imgui\imgui_internal.h" />
+    <ClInclude Include="vendor\imgui\imstb_rectpack.h" />
+    <ClInclude Include="vendor\imgui\imstb_textedit.h" />
+    <ClInclude Include="vendor\imgui\imstb_truetype.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
