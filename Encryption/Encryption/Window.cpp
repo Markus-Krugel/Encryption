@@ -2,8 +2,9 @@
 
 static bool s_GLFWInitialized = false;
 
-const char* comboItems[] = { "Bacon Code", "Ceaser Cipher", "Polybios Code", "Ror Language", "Transposition", "U Language", "Vigenere Cipher" };
+const char* comboItems[] = { "Ror Language", "U Language","Bacon Code",  "Polybios Code", "Ceaser Cipher", "Transposition", "Vigenere Cipher" };
 static const char* currentComboItem = "Encryption Algorithm";
+int currentComboIndex;
 static const int comboItemSize = 7;
 
 static const int maxTextSize = 1000;
@@ -20,9 +21,10 @@ static void GLFWErrorCallback(int error, const char* description)
 	std::cout << "GLFW Error( " << error << "," << description << ")";
 }
 
-Window::Window(const WindowProps& props)
+Window::Window(const WindowProps& props, std::shared_ptr<EventDispatcher> dispatcherInput)
 {
 	Init(props);
+	dispatcher = dispatcherInput;
 }
 
 Window::~Window()
@@ -180,6 +182,20 @@ bool Window::IsVSync() const
 	return m_Data.VSync;
 }
 
+int Window::GetCurrentComboIndex()
+{
+	return currentComboIndex;
+}
+
+std::string Window::GetInputText()
+{
+	return textInput;
+}
+
+void Window::setOutputText(std::string text)
+{
+	*textOutput = *WordHelper::transformStringToChar(text);
+}
 
 void Window::DrawEncryptionWindow()
 {
@@ -191,7 +207,10 @@ void Window::DrawEncryptionWindow()
 		{
 			bool is_selected = (currentComboItem == comboItems[n]);
 			if (ImGui::Selectable(comboItems[n], is_selected))
+			{
 				currentComboItem = comboItems[n];
+				currentComboIndex = n;
+			}
 			if (is_selected)
 				ImGui::SetItemDefaultFocus();
 		}
@@ -200,7 +219,8 @@ void Window::DrawEncryptionWindow()
 
 	ImGui::InputTextMultiline(textInputLabel, textInput, maxTextSize, { (float)(m_Data.Width / 2) - 200, (float)(m_Data.Width / 4) });
 	ImGui::SameLine(0, 80);
-	ImGui::Button("Encrypt!");
+	if (ImGui::Button("Encrypt!"))
+		dispatcher->startEvent({ true,1 });
 	ImGui::SameLine(0, 80);
 	ImGui::InputTextMultiline(textOutputLabel, textOutput, maxTextSize, { (float)(m_Data.Width / 2) - 200, (float)(m_Data.Width / 4) });
 

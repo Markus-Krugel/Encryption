@@ -72,6 +72,9 @@
     <ClCompile Include="vendor\imgui\examples\imgui_impl_opengl3.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Application.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EncryptCommand.h">
@@ -117,6 +120,15 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="vendor\imgui\examples\imgui_impl_opengl3.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="WordHelper.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="EventDispatcher.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

@@ -10,6 +10,9 @@
 #include "vendor/imgui/examples/imgui_impl_opengl3.h"
 #include <string>
 #include <functional>
+#include "WordHelper.h"
+#include "EventDispatcher.h"
+
 
 struct WindowProps
 {
@@ -28,7 +31,8 @@ struct WindowProps
 class Window
 {
 public:
-	Window(const WindowProps& props);
+
+	Window(const WindowProps& props, std::shared_ptr<EventDispatcher> dispatcher);
 	~Window();
 
 	void OnUpdate();
@@ -41,11 +45,12 @@ public:
 	bool IsVSync() const;
 
 	inline void* GetNativeWindow() const { return m_Window; }
+	int GetCurrentComboIndex();
+	std::string GetInputText();
+
+	void setOutputText(std::string text);
+
 private:
-	void Init(const WindowProps& props);
-	void Shutdown();
-private:
-	GLFWwindow* m_Window;
 
 	struct WindowData
 	{
@@ -54,8 +59,13 @@ private:
 		bool VSync;
 	};
 
+	GLFWwindow* m_Window;
+	WindowData m_Data;
+	std::shared_ptr<EventDispatcher> dispatcher;
+
+	void Init(const WindowProps& props);
+	void Shutdown();
+
 	void DrawEncryptionWindow();
 	void DrawHelpWindow();
-
-	WindowData m_Data;
 };

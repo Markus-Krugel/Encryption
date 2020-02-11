@@ -146,6 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Application.cpp" />
     <ClCompile Include="Atbasch.cpp" />
     <ClCompile Include="BaconCode.cpp" />
     <ClCompile Include="BiLanguage.cpp" />
@@ -167,7 +168,9 @@
     <ClCompile Include="WordHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Application.h" />
     <ClInclude Include="EncryptCommand.h" />
+    <ClInclude Include="EventDispatcher.h" />
     <ClInclude Include="vendor\glad\include\glad\glad.h" />
     <ClInclude Include="vendor\glad\include\KHR\khrplatform.h" />
     <ClInclude Include="vendor\glfw\include\GLFW\glfw3.h" />
@@ -182,6 +185,7 @@
     <ClInclude Include="vendor\imgui\imstb_textedit.h" />
     <ClInclude Include="vendor\imgui\imstb_truetype.h" />
     <ClInclude Include="Window.h" />
+    <ClInclude Include="WordHelper.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
