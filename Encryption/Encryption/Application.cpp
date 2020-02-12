@@ -33,19 +33,33 @@ void Application::onEncryptEvent()
 
 void Application::onDecryptEvent()
 {
-	//if (typeid(algorithm).name == "VigenereCipher")
-	//{
-	//
-	//}
-	//else if (typeid(algorithm).name == "Ceaser" || typeid(algorithm).name == "Transposition")
-	//{
-	//
-	//}
-	//else
-	//{
-	//	std::string text = m_Window->GetInputText();
-	//	m_Window->setOutputText(algorithm.Decode(text));
-	//}
+	int newAlgorithm = m_Window->GetCurrentComboIndex();
+
+	if (newAlgorithm == currentAlgorithm)
+	{
+		std::string currentInput = m_Window->GetInputText();
+		std::string decoded = algorithm->Decode(currentInput);
+		m_Window->SetOutputText(decoded);
+	}
+	else
+	{
+		onAlgorithmChangedEvent(newAlgorithm);
+
+		currentAlgorithm = newAlgorithm;
+
+		std::string currentInput = m_Window->GetInputText();
+		if (currentAlgorithm < 4)
+		{
+			std::string decoded = algorithm->Decode(currentInput);
+			m_Window->SetOutputText(decoded);
+			std::cout << "Algorithm changed" << std::endl;
+		}
+		//else
+		//{
+		//	// get additional window data
+		//	// use encode with additional data
+		//}
+	}
 }
 
 void Application::onAlgorithmChangedEvent(int& newAlgorithm)
@@ -114,6 +128,12 @@ void Application::handleEvent(int eventID)
 		break;
 	case 1:
 		onEncryptEvent();
+		break;
+	case 2:
+		onDecryptEvent();
+		break;
+	case 3:
+		m_Window->SwitchText();
 		break;
 	}
 

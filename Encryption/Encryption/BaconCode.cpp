@@ -37,8 +37,6 @@ std::string BaconCode::Encode(std::string& toEncode)
 				output.push_back('a');
 			else
 				output.push_back('b');
-			
-			break;
 		}
 		else
 			output.push_back(toEncode.at(i));

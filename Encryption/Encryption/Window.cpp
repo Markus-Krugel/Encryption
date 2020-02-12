@@ -1,11 +1,12 @@
 #include "Window.h"
+#pragma warning(disable : 4996)
 
 static bool s_GLFWInitialized = false;
 
 const char* comboItems[] = {"Atbasch", "BiLanguage", "Ror Language", "U Language","Bacon Code",  "Polybios Code", "Ceaser Cipher", "Transposition", "Vigenere Cipher" };
 static const char* currentComboItem = "Encryption Algorithm";
 int currentComboIndex;
-static const int comboItemSize = 7;
+static const int comboItemSize = 9;
 
 static const int maxTextSize = 1000;
 
@@ -199,6 +200,12 @@ void Window::UpdateData(int width, int heigth)
 	m_Data.Height = width;
 }
 
+void Window::SwitchText()
+{
+	strncpy(textInput, textOutput, maxTextSize);
+	strncpy(textOutput, "", maxTextSize);
+}
+
 void Window::DrawEncryptionWindow()
 {
 	ImGui::Begin("Encryption", (bool*)0, ImGuiWindowFlags_NoDecoration);
@@ -226,11 +233,21 @@ void Window::DrawEncryptionWindow()
 	// checks bool[] and then add accordingly the amount of additional combo boxes
 
 	ImGui::InputTextMultiline(textInputLabel, textInput, maxTextSize, { (float)(m_Data.Width / 2) - 200, (float)(m_Data.Width / 4) });
-	ImGui::SameLine(0, 80);
+	ImGui::SameLine(0, 80); 
+	ImGui::BeginGroup();
+
 	if (ImGui::Button("Encrypt!"))
 		dispatcher->startEvent({ true,1 });
+	if (ImGui::Button("Decrypt!"))
+		dispatcher->startEvent({ true,2 });
+	if (ImGui::Button("<-------"))
+		dispatcher->startEvent({ true,3 });
+
+	ImGui::EndGroup();
+
+	
 	ImGui::SameLine(0, 80);
-	ImGui::InputTextMultiline(textOutputLabel, textOutput, maxTextSize, { (float)(m_Data.Width / 2) - 200, (float)(m_Data.Width / 4) });
+	ImGui::InputTextMultiline(textOutputLabel, textOutput, maxTextSize, { (float)(m_Data.Width / 2) - 200, (float)(m_Data.Width / 4) }, ImGuiInputTextFlags_ReadOnly);
 
 
 	ImGui::End();

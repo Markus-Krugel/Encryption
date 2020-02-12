@@ -23,7 +23,6 @@ std::string PolybiosCode::Encode(std::string& toEncode)
 			else
 				output.push_back(((int)ceil((double)alphPos / 5)) + '0');
 			output.push_back(((alphPos % 5) + 1) + '0');
-			break;
 		}
 		else
 			output.push_back(toEncode.at(i));
