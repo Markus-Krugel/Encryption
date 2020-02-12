@@ -1,7 +1,5 @@
 #include "Application.h"
 
-// "Ror Language", "U Language","Bacon Code",  "Polybios Code", "Ceaser Cipher", "Transposition", "Vigenere Cipher" 
-
 void Application::onEncryptEvent()
 {
 	int newAlgorithm = m_Window->GetCurrentComboIndex();
@@ -9,46 +7,27 @@ void Application::onEncryptEvent()
 	if (newAlgorithm == currentAlgorithm)
 	{
 		std::string currentInput = m_Window->GetInputText();
-		//m_Window->setOutputText(algorithm.Encode(currentInput));
+		std::string encoded = algorithm->Encode(currentInput);
+		m_Window->SetOutputText(encoded);
 	}
 	else
 	{
-		switch (newAlgorithm)
-		{
-		case 0:
-			algorithm = RorLanguage();
-			break;
-		case 1:
-			algorithm = ULanguage();
-			break;
-		case 2:
-			algorithm = BaconCode();
-			break;
-		case 3:
-			algorithm = PolybiosCode();
-			break;
-		case 4:
-			algorithm = Caeser();
-			break;
-		case 5:
-			algorithm = Transposition();
-			break;
-		case 6:
-			algorithm = VigenereCipher();
-			break;
-		}
+		onAlgorithmChangedEvent(newAlgorithm);
 
 		currentAlgorithm = newAlgorithm;
 
 		std::string currentInput = m_Window->GetInputText();
 		if (currentAlgorithm < 4)
-			//m_Window->setOutputText(algorithm.Encode(currentInput));
-			std::cout << "Algorithm changed" << std::endl;
-		else
 		{
-			// get additional window data
-			// use encode with additional data
+			std::string encoded = algorithm->Encode(currentInput);
+			m_Window->SetOutputText(encoded);
+			std::cout << "Algorithm changed" << std::endl;
 		}
+		//else
+		//{
+		//	// get additional window data
+		//	// use encode with additional data
+		//}
 	}
 }
 
@@ -69,30 +48,36 @@ void Application::onDecryptEvent()
 	//}
 }
 
-void Application::onAlgorithmChangedEvent(char& newAlgorithm)
+void Application::onAlgorithmChangedEvent(int& newAlgorithm)
 {
 	switch (newAlgorithm)
 	{
 	case 0:
-		algorithm = BaconCode();
+		algorithm = new Atbasch();
 		break;
 	case 1:
-		algorithm = Caeser();
+		algorithm = new BiLanguage();
 		break;
 	case 2:
-		algorithm = PolybiosCode();
+		algorithm = new RorLanguage();
 		break;
 	case 3:
-		algorithm = RorLanguage();
+		algorithm = new ULanguage();
 		break;
 	case 4:
-		algorithm = Transposition();
+		algorithm = new BaconCode();
 		break;
 	case 5:
-		algorithm = ULanguage();
+		algorithm = new PolybiosCode();
 		break;
 	case 6:
-		algorithm = VigenereCipher();
+		algorithm = new Ceaser();
+		break;
+	case 7:
+		algorithm = new Transposition();
+		break;
+	case 8:
+		algorithm = new VigenereCipher();
 		break;
 	}
 }
@@ -124,6 +109,9 @@ void Application::handleEvent(int eventID)
 	
 	switch (eventID)
 	{
+	case 0:
+		isRunning = false;
+		break;
 	case 1:
 		onEncryptEvent();
 		break;

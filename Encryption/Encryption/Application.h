@@ -1,18 +1,19 @@
 #pragma once
 #include <iostream>
 #include "EncryptCommand.h"
-#include "ULanguage.cpp"
-#include "BiLanguage.cpp"
-#include "RorLanguage.cpp"
-#include "Atbasch.cpp"
-#include "PolybiosCode.cpp"
-#include "Ceaser.cpp"
-#include "BaconCode.cpp"
-#include "VigenereCipher.cpp"
-#include "Transposition.cpp"
+#include "ULanguage.h"
+#include "BiLanguage.h"
+#include "RorLanguage.h"
+#include "Atbasch.h"
+#include "PolybiosCode.h"
+#include "Ceaser.h"
+#include "BaconCode.h"
+#include "VigenereCipher.h"
+#include "Transposition.h"
 
 #include "Window.h"
 #include "EventDispatcher.h";
+#include "FileManager.h"
 
 class Application
 {
@@ -21,10 +22,11 @@ public:
 
 private:
 	bool isRunning = true;
-	int currentAlgorithm;
+	int currentAlgorithm = -1;
 	Window* m_Window;
-	EncryptCommand algorithm;
+	EncryptCommand* algorithm;
 	std::shared_ptr<EventDispatcher> dispatcher = std::make_shared<EventDispatcher>();
+	FileManager fileManager;
 
 	void handleEvent(int eventID);
 
@@ -32,5 +34,5 @@ private:
 
 	void onDecryptEvent();
 
-	void onAlgorithmChangedEvent(char& newAlgorithm);
+	void onAlgorithmChangedEvent(int& newAlgorithm);
 };

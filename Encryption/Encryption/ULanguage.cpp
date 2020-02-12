@@ -1,114 +1,68 @@
-#include "EncryptCommand.h"
-#include <iostream>
+#include "ULanguage.h"
 
 
-// Adds an 'U' to the beginning of a word, if the word starts with
-// a vocal it replaces it with an 'U'.
-
-class ULanguage : public EncryptCommand
+std::string ULanguage::Encode(std::string& toEncode)
 {
-	public:
+	bool wordStart = true;
+	std::string output;
 
-		std::string Encode(std::string* toEncode)
+	for (std::string::size_type i = 0; i < toEncode.length(); ++i) 
+	{
+		if (wordStart)
 		{
-			bool wordStart = true;
-			std::string output;
+			wordStart = false;
 
-			for (std::string::size_type i = 0; i < toEncode->length(); ++i) 
+			if (WordHelper::charIsVocal((char*)toEncode.at(i)))
 			{
-				if (wordStart)
-				{
-					wordStart = false;
-
-					if (charIsVocal(&toEncode->at(i)))
-					{
-						if (isupper(toEncode->at(i)))
-							output.append("U");
-						else
-							output.append("u");
-
-						continue;
-					}
+				if (isupper(toEncode.at(i)))
 					output.append("U");
-				}
-				else if (isspace(toEncode->at(i)))
-					wordStart = true;
-				
-				char temp = (char)(tolower(toEncode->at(i)));
+				else
+					output.append("u");
 
-				output.push_back(temp);
+				continue;
 			}
-
-			return output;
+			output.append("U");
 		}
-	
-		std::string EncodeFromeFile(const char* filePath)
-		{
-			std::string output;
+		else if (isspace(toEncode.at(i)))
+			wordStart = true;
+		
+		char temp = (char)(tolower(toEncode.at(i)));
 
-			std::ifstream in(filePath, std::ios::in | std::ios::binary);
-			if (in)
-			{
-				in.seekg(0, std::ios::end);
-				output.resize(in.tellg());
-				in.seekg(0, std::ios::beg);
-				in.read(&output[0], output.size());
-				in.close();
-			}
+		output.push_back(temp);
+	}
+
+	return output;
+}
+
+std::string ULanguage::Decode(std::string& toDecode)
+{
+	std::string output;
+	bool wordStart = true;
+
+	for (size_t i = 0; i < toDecode.length(); i++)
+	{
+		if (wordStart && tolower(toDecode.at(i)) == tolower('u'))
+		{
+			// As it is impossible to find out if the U replaced a vocal, therefore
+			// we give the vocals as a possible answer
+			if (islower(toDecode.at(i)))
+				output.append("(a/e/i/o/u)");
 			else
-				std::cout << "Could not open file !" << std::endl;
+				output.append("(A/E/I/O/U)");
 
-			return Encode(&output);
+			wordStart = false;
+
+			continue;
 		}
-	
-		std::string Decode(std::string* toDecode)
-		{
-			std::string output;
-			bool wordStart = true;
+		else if (wordStart && tolower(toDecode.at(i)) != tolower('u'))
+			return "Algorithm not applicable";
+		else if (isspace(toDecode.at(i)))
+			wordStart = true;
 
-			for (size_t i = 0; i < toDecode->length(); i++)
-			{
-				if (wordStart && tolower(toDecode->at(i)) == tolower('u'))
-				{
-					// As it is impossible to find out if the U replaced a vocal, therefore
-					// we give the vocals as a possible answer
-					if (islower(toDecode->at(i)))
-						output.append("(a/e/i/o/u)");
-					else
-						output.append("(A/E/I/O/U)");
+		output.push_back(toDecode.at(i));
+	}
 
-					wordStart = false;
+	return output;
+}
 
-					continue;
-				}
-				else if (wordStart && tolower(toDecode->at(i)) != tolower('u'))
-					return "Algorithm not applicable";
-				else if (isspace(toDecode->at(i)))
-					wordStart = true;
-
-				output.push_back(toDecode->at(i));
-			}
-
-			return output;
-		}
-	
-		std::string DecodeFromeFile(const char* filePath)
-		{
-			std::string text;
-
-			std::ifstream in(filePath, std::ios::in | std::ios::binary);
-			if (in)
-			{
-				in.seekg(0, std::ios::end);
-				text.resize(in.tellg());
-				in.seekg(0, std::ios::beg);
-				in.read(&text[0], text.size());
-				in.close();
-			}
-			else
-				std::cout << "Could not open file !" << std::endl;
-
-			return Decode(&text);
-		}
-};
 

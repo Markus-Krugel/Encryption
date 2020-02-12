@@ -1,206 +1,83 @@
-#include "EncryptCommand.h"
-#include <iostream>
-#include <vector>
+#include "VigenereCipher.h"
 
-// Stores the alphabet in a 5x5 table where i and j shares the same cell . The row is the ten's digit and the column the single unit.
 
-class VigenereCipher : public EncryptCommand
+std::string VigenereCipher::Encode(std::string& toEncode)
 {
-	public:
-	
-		std::string Encode(std::string* toEncode, std::string* codeword)
+	return Encode(toEncode, (std::string&) "code");
+}
+
+std::string VigenereCipher::Encode(std::string& toEncode, std::string& codeword)
+{
+	std::string output;
+
+	// stores the position of the codeword so that you dont enocode non alpha chars
+	int codePosition = 0;
+
+	for (std::string::size_type i = 0; i < toEncode.length(); ++i)
+	{
+		if (isalpha(toEncode.at(i)))
 		{
-			std::string output;
+			int encodeAlpPos = WordHelper::getAlphabetPosition(toEncode.at(i));
+			int codeAlpPos = WordHelper::getAlphabetPosition(codeword.at(codePosition));
 
-			std::vector<int> encodeToInt;
-			std::vector<int> codeToInt;
+			int position = encodeAlpPos + codeAlpPos;
 
-			// store the alphabetical position of the letters in the words
-			encodeToInt.reserve(toEncode->length());
-			codeToInt.reserve(codeword->length());
-	
-			for (size_t i = 0; i < toEncode->length(); i++)
-			{
-				for (size_t j = 0; j < alphabet.length(); j++)
-				{
-					if (!isalpha(toEncode->at(i)))
-					{
-						encodeToInt.push_back(-1);	
-						break;
-					}
-					else if(toupper(toEncode->at(i)) == alphabet[j])
-					{
-						encodeToInt.push_back(j);
-						break;
-					}
-				}	
-			}
+			// if over alphabet size then start at the beginning of alphabet
+			if (position >= 26)
+				position = position - 26;
 
-			for (size_t i = 0; i < codeword->length(); i++)
-			{
-				for (size_t j = 0; j < alphabet.length(); j++)
-				{
-					if (!isalpha(codeword->at(i)))
-					{
-						codeToInt.push_back(-1);
-						break;
-					}
-					else if (toupper(codeword->at(i)) == alphabet[j])
-					{
-						codeToInt.push_back(j);
-						break;
-					}
-				}
-			}
+			output.push_back(WordHelper::getCharAtAlphabetPosition(position, islower(toEncode.at(i))));
 
-			// stores the position of the codeword so that you dont enocode non alpha chars
-			int codePosition = 0;
-
-			for (std::string::size_type i = 0; i < toEncode->length(); ++i)
-			{
-				if (isalpha(toEncode->at(i)))
-				{
-					int position = encodeToInt[i] + codeToInt[codePosition];
-
-					if (position >= alphabet.length())
-						position = position - alphabet.length();
-
-					// Ensures that the correct letter case is used
-					if(isupper(toEncode->at(i)))
-						output.push_back(alphabet[position]);
-					else
-						output.push_back(tolower(alphabet[position]));
-
-					if (codePosition == codeToInt.size() - 1)
-						codePosition = 0;
-					else
-						codePosition++;
-				}
-				else
-				{
-					output.push_back(toEncode->at(i));
-				}
-			}
-	
-			return output;
-		}
-	
-		std::string EncodeFromeFile(const char* filePath, std::string* codeword)
-		{
-			std::string text;
-	
-			std::ifstream in(filePath, std::ios::in | std::ios::binary);
-			if (in)
-			{
-				in.seekg(0, std::ios::end);
-				text.resize(in.tellg());
-				in.seekg(0, std::ios::beg);
-				in.read(&text[0], text.size());
-				in.close();
-			}
+			if (codePosition == codeword.length() - 1)
+				codePosition = 0;
 			else
-				std::cout << "Could not open file !" << std::endl;
-	
-			return Encode(&text, codeword);
+				codePosition++;
 		}
-	
-		std::string Decode(std::string* toDecode, std::string* codeword)
+		else
 		{
-			std::string output;
-
-			std::vector<int> encodeToInt;
-			std::vector<int> codeToInt;
-
-			// store the alphabetical position of the letters in the words
-			encodeToInt.reserve(toDecode->length());
-			codeToInt.reserve(codeword->length());
-
-			for (size_t i = 0; i < toDecode->length(); i++)
-			{
-				for (size_t j = 0; j < alphabet.length(); j++)
-				{
-					if (!isalpha(toDecode->at(i)))
-					{
-						encodeToInt.push_back(-1);
-						break;
-					}
-					else if (toupper(toDecode->at(i)) == alphabet[j])
-					{
-						encodeToInt.push_back(j);
-						break;
-					}
-				}
-			}
-
-			for (size_t i = 0; i < codeword->length(); i++)
-			{
-				for (size_t j = 0; j < alphabet.length(); j++)
-				{
-					if (!isalpha(codeword->at(i)))
-					{
-						codeToInt.push_back(-1);
-						break;
-					}
-					else if (toupper(codeword->at(i)) == alphabet[j])
-					{
-						codeToInt.push_back(j);
-						break;
-					}
-				}
-			}
-
-			// stores the position of the codeword so that you dont enocode non alpha chars
-			int codePosition = 0;
-
-			for (std::string::size_type i = 0; i < toDecode->length(); ++i)
-			{
-				if (isalpha(toDecode->at(i)))
-				{
-					int position = encodeToInt[i] - codeToInt[codePosition];
-
-					if (position < 0)
-						position = alphabet.length() + position;
-
-					// Ensures that the correct letter case is used
-					if (isupper(toDecode->at(i)))
-						output.push_back(alphabet[position]);
-					else
-						output.push_back(tolower(alphabet[position]));
-
-					if (codePosition == codeToInt.size() - 1)
-						codePosition = 0;
-					else
-						codePosition++;
-				}
-				else
-				{
-					output.push_back(toDecode->at(i));
-				}
-			}
-
-			return output;
+			output.push_back(toEncode.at(i));
 		}
-	
-		std::string DecodeFromeFile(const char* filePath, std::string* codeword)
-		{
-			std::string text;
+	}
 
-			std::ifstream in(filePath, std::ios::in | std::ios::binary);
-			if (in)
-			{
-				in.seekg(0, std::ios::end);
-				text.resize(in.tellg());
-				in.seekg(0, std::ios::beg);
-				in.read(&text[0], text.size());
-				in.close();
-			}
+	return output;
+}
+
+std::string VigenereCipher::Decode(std::string& toEncode)
+{
+	return Decode(toEncode, (std::string&) "code");
+}
+
+std::string VigenereCipher::Decode(std::string& toDecode, std::string& codeword)
+{
+	std::string output;
+
+	// stores the position of the codeword so that you dont enocode non alpha chars
+	int codePosition = 0;
+
+	for (std::string::size_type i = 0; i < toDecode.length(); ++i)
+	{
+		if (isalpha(toDecode.at(i)))
+		{
+			int decodeAlpPos = WordHelper::getAlphabetPosition(toDecode.at(i));
+			int codeAlpPos = WordHelper::getAlphabetPosition(codeword.at(codePosition));
+
+			int position = decodeAlpPos + codeAlpPos;
+
+			if (position < 0)
+				position = 26 + position;
+
+			output.push_back(WordHelper::getCharAtAlphabetPosition(position, islower(toDecode.at(i))));
+
+			if (codePosition == codeword.length() - 1)
+				codePosition = 0;
 			else
-				std::cout << "Could not open file !" << std::endl;
-
-			return Decode(&text, codeword);
+				codePosition++;
 		}
-	
-	private:
-		std::string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-};
+		else
+		{
+			output.push_back(toDecode.at(i));
+		}
+	}
 
+	return output;
+}

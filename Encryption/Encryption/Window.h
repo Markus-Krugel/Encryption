@@ -48,7 +48,8 @@ public:
 	int GetCurrentComboIndex();
 	std::string GetInputText();
 
-	void setOutputText(std::string text);
+	void SetOutputText(std::string text);
+	void UpdateData(int width, int heigth);
 
 private:
 

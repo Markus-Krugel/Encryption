@@ -1,3 +1,4 @@
+#pragma once
 #include <string>
 
 class WordHelper
@@ -7,7 +8,13 @@ public:
 
 	static char getCharAtAlphabetPosition(int position, bool lowerCase);
 
-	static char* transformStringToChar(std::string& text);
+	static char getCharAtReverseAlphabetPosition(int position, bool lowerCase);
+
+	static void transformStringToChar(std::string& text, char* outChar);
+
+	static bool charIsVocal(char* letter);
+
+	static bool WordOnlyContainsAandBs(std::string* toDecode);
 
 private:
 	static const int decimalStartUpperletter = 65;

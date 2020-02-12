@@ -2,7 +2,7 @@
 
 static bool s_GLFWInitialized = false;
 
-const char* comboItems[] = { "Ror Language", "U Language","Bacon Code",  "Polybios Code", "Ceaser Cipher", "Transposition", "Vigenere Cipher" };
+const char* comboItems[] = {"Atbasch", "BiLanguage", "Ror Language", "U Language","Bacon Code",  "Polybios Code", "Ceaser Cipher", "Transposition", "Vigenere Cipher" };
 static const char* currentComboItem = "Encryption Algorithm";
 int currentComboIndex;
 static const int comboItemSize = 7;
@@ -53,26 +53,24 @@ void Window::Init(const WindowProps& props)
 	m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
 	glfwMakeContextCurrent(m_Window);
 	int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-	glfwSetWindowUserPointer(m_Window, &m_Data);
+	glfwSetWindowUserPointer(m_Window, this);
 	SetVSync(true);
 
 	// Set GLFW callbacks
 	glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
 	{
-		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-		data.Width = width;
-		data.Height = height;
+		Window& windowObj = *(Window*)glfwGetWindowUserPointer(window);
+		windowObj.UpdateData(width, height);
 	});
 
 	glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
 	{
-		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+		Window& windowObj = *(Window*)glfwGetWindowUserPointer(window);
+		windowObj.dispatcher->startEvent({ true,0 });
 	});
 
 	glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
 	{
-		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
 		switch (action)
 		{
 		case GLFW_PRESS:
@@ -92,13 +90,11 @@ void Window::Init(const WindowProps& props)
 
 	glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int keycode)
 	{
-		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
 	});
 
 	glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)
 	{
-		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
 		switch (action)
 		{
 		case GLFW_PRESS:
@@ -114,12 +110,12 @@ void Window::Init(const WindowProps& props)
 
 	glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset)
 	{
-		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+		
 	});
 
 	glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos)
 	{
-		WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+		
 	});
 
 	IMGUI_CHECKVERSION();
@@ -192,9 +188,15 @@ std::string Window::GetInputText()
 	return textInput;
 }
 
-void Window::setOutputText(std::string text)
+void Window::SetOutputText(std::string text)
 {
-	*textOutput = *WordHelper::transformStringToChar(text);
+	WordHelper::transformStringToChar(text, textOutput);
+}
+
+void Window::UpdateData(int width, int heigth)
+{
+	m_Data.Width = width;
+	m_Data.Height = width;
 }
 
 void Window::DrawEncryptionWindow()
@@ -216,6 +218,12 @@ void Window::DrawEncryptionWindow()
 		}
 		ImGui::EndCombo();
 	}
+	//if certain algorithm then add textinput(or intInput if possible) in same line
+
+	// would need an int to store last position of bool array
+	// another button, which when clicked adds a true to a bool[] and remove for opposite
+	// add button disable if last possible position, disable remove at first position
+	// checks bool[] and then add accordingly the amount of additional combo boxes
 
 	ImGui::InputTextMultiline(textInputLabel, textInput, maxTextSize, { (float)(m_Data.Width / 2) - 200, (float)(m_Data.Width / 4) });
 	ImGui::SameLine(0, 80);
