@@ -51,6 +51,8 @@ public:
 	void SetOutputText(std::string text);
 	void UpdateData(int width, int heigth);
 	void SwitchText();
+	std::string GetCodeWord();
+	int GetAdditionalValue();
 
 private:
 

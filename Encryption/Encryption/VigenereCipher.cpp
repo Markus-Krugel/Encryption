@@ -10,6 +10,9 @@ std::string VigenereCipher::Encode(std::string& toEncode, std::string& codeword)
 {
 	std::string output;
 
+	if (codeword == "")
+		return "Codeword needed.";
+
 	// stores the position of the codeword so that you dont enocode non alpha chars
 	int codePosition = 0;
 
@@ -61,7 +64,7 @@ std::string VigenereCipher::Decode(std::string& toDecode, std::string& codeword)
 			int decodeAlpPos = WordHelper::getAlphabetPosition(toDecode.at(i));
 			int codeAlpPos = WordHelper::getAlphabetPosition(codeword.at(codePosition));
 
-			int position = decodeAlpPos + codeAlpPos;
+			int position = decodeAlpPos - codeAlpPos;
 
 			if (position < 0)
 				position = 26 + position;

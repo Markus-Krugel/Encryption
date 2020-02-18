@@ -16,7 +16,7 @@ std::string Ceaser::Encode(std::string& toEncode, int moveAmount)
 			int alphPos = WordHelper::getAlphabetPosition(toEncode.at(i));
 			
 			// if it extends the last letter of the alphabet, change to the start of the alphabet
-			if (alphPos + moveAmount > 26)
+			if (alphPos + moveAmount >= 26)
 				output.push_back(WordHelper::getCharAtAlphabetPosition(alphPos + moveAmount - 26, islower(toEncode.at(i))));
 			else 
 				output.push_back(WordHelper::getCharAtAlphabetPosition(alphPos + moveAmount, islower(toEncode.at(i))));;

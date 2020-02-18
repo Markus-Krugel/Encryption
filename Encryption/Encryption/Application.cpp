@@ -4,30 +4,57 @@ void Application::onEncryptEvent()
 {
 	int newAlgorithm = m_Window->GetCurrentComboIndex();
 
-	if (newAlgorithm == currentAlgorithm)
+	std::string currentInput = m_Window->GetInputText();
+
+	// for not changing simple algorithms with one input
+	if (newAlgorithm == currentAlgorithm && currentAlgorithm < 6)
 	{
-		std::string currentInput = m_Window->GetInputText();
 		std::string encoded = algorithm->Encode(currentInput);
 		m_Window->SetOutputText(encoded);
 	}
+	// for more advanced algorithms with two inputs
+	else if (currentAlgorithm > 5)
+	{
+		if (currentAlgorithm != newAlgorithm)
+		{
+			currentAlgorithm = newAlgorithm;
+			onAlgorithmChangedEvent(currentAlgorithm);
+		}
+
+		int additionalValue = m_Window->GetAdditionalValue();
+		std::string encoded;
+
+		if (currentAlgorithm == 6)
+		{
+			Ceaser ceaser = dynamic_cast<Ceaser&>(*algorithm);
+			encoded = ceaser.Encode(currentInput, additionalValue);
+		}
+		else if(currentAlgorithm == 7)
+		{
+			Transposition trans = dynamic_cast<Transposition&>(*algorithm);
+			encoded = trans.Encode(currentInput, additionalValue);
+		}
+		else
+		{
+			std::string codeword = m_Window->GetCodeWord();
+			VigenereCipher vig = dynamic_cast<VigenereCipher&>(*algorithm);
+			encoded = vig.Encode(currentInput, codeword);
+		}
+		m_Window->SetOutputText(encoded);
+	}
+	// for changing to simple algorithms with one input
 	else
 	{
 		onAlgorithmChangedEvent(newAlgorithm);
 
 		currentAlgorithm = newAlgorithm;
 
-		std::string currentInput = m_Window->GetInputText();
-		if (currentAlgorithm < 4)
+		if (currentAlgorithm < 6)
 		{
 			std::string encoded = algorithm->Encode(currentInput);
 			m_Window->SetOutputText(encoded);
 			std::cout << "Algorithm changed" << std::endl;
 		}
-		//else
-		//{
-		//	// get additional window data
-		//	// use encode with additional data
-		//}
 	}
 }
 
@@ -35,30 +62,58 @@ void Application::onDecryptEvent()
 {
 	int newAlgorithm = m_Window->GetCurrentComboIndex();
 
-	if (newAlgorithm == currentAlgorithm)
+	std::string currentInput = m_Window->GetInputText();
+
+	// for not changing simple algorithms with one input
+	if (newAlgorithm == currentAlgorithm && currentAlgorithm < 6)
 	{
-		std::string currentInput = m_Window->GetInputText();
 		std::string decoded = algorithm->Decode(currentInput);
 		m_Window->SetOutputText(decoded);
 	}
+	// for more advanced algorithms with two inputs
+	else if (currentAlgorithm > 5)
+	{
+		if (currentAlgorithm != newAlgorithm)
+		{
+			currentAlgorithm = newAlgorithm;
+			onAlgorithmChangedEvent(currentAlgorithm);
+		}
+
+		int additionalValue = m_Window->GetAdditionalValue();
+
+		std::string decoded;
+
+		if (currentAlgorithm == 6)
+		{
+			Ceaser ceaser = dynamic_cast<Ceaser&>(*algorithm);
+			decoded = ceaser.Decode(currentInput, additionalValue);
+		}
+		else if (currentAlgorithm == 7)
+		{
+			Transposition trans = dynamic_cast<Transposition&>(*algorithm);
+			decoded = trans.Decode(currentInput, additionalValue);
+		}
+		else
+		{
+			std::string codeword = m_Window->GetCodeWord();
+			VigenereCipher vig = dynamic_cast<VigenereCipher&>(*algorithm);
+			decoded = vig.Decode(currentInput, codeword);
+		}
+		m_Window->SetOutputText(decoded);
+	}
+	// for changing to simple algorithms with one input
 	else
 	{
 		onAlgorithmChangedEvent(newAlgorithm);
 
 		currentAlgorithm = newAlgorithm;
 
-		std::string currentInput = m_Window->GetInputText();
-		if (currentAlgorithm < 4)
+		if (currentAlgorithm < 6)
 		{
 			std::string decoded = algorithm->Decode(currentInput);
 			m_Window->SetOutputText(decoded);
 			std::cout << "Algorithm changed" << std::endl;
 		}
-		//else
-		//{
-		//	// get additional window data
-		//	// use encode with additional data
-		//}
 	}
 }
 

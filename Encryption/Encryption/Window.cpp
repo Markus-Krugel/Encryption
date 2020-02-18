@@ -15,7 +15,11 @@ char textInput[maxTextSize]  = "This is an example text.";
 
 static const char* textOutputLabel = "Output";
 char textOutput[maxTextSize] = "";
+int additionalValue = 3;
+static const int maxCodeWordSize = 50;
+char codeWord[maxCodeWordSize];
 
+#define EmptySpace(x , y) ImGui::Dummy({x,y});
 
 static void GLFWErrorCallback(int error, const char* description)
 {
@@ -206,9 +210,22 @@ void Window::SwitchText()
 	strncpy(textOutput, "", maxTextSize);
 }
 
+std::string Window::GetCodeWord()
+{
+	return codeWord;
+}
+
+int Window::GetAdditionalValue()
+{
+	return additionalValue;
+}
+
 void Window::DrawEncryptionWindow()
 {
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(30,0));
 	ImGui::Begin("Encryption", (bool*)0, ImGuiWindowFlags_NoDecoration);
+
+	EmptySpace(0, 10);
 
 	if (ImGui::BeginCombo(currentComboItem, currentComboItem, ImGuiComboFlags_NoPreview))
 	{
@@ -225,6 +242,29 @@ void Window::DrawEncryptionWindow()
 		}
 		ImGui::EndCombo();
 	}
+
+	if (currentComboIndex > 5 && currentComboIndex < 8)
+	{
+		// change value to 2 if transposition selected as 1 would do nothíng
+		if (currentComboIndex == 7 && additionalValue == 1)
+			additionalValue = 2;
+
+		ImGui::SameLine(0, 80);
+		// decided to do index -5 so that if it is transposition the minimum would be 2 and for ceaser 1
+		ImGui::SliderInt("Value", &additionalValue, currentComboIndex - 5, 10);
+	}
+	else if (currentComboIndex == 8)
+	{
+		ImGui::SameLine(0, 80);
+
+		ImGui::PushItemWidth(400);
+		// +1 for null terminator
+		ImGui::InputText("Codeword", codeWord, maxCodeWordSize + 1, ImGuiInputTextFlags_OnlyLetters);
+		ImGui::PopItemWidth();
+	}
+
+	EmptySpace(0, 20);
+
 	//if certain algorithm then add textinput(or intInput if possible) in same line
 
 	// would need an int to store last position of bool array
@@ -236,10 +276,13 @@ void Window::DrawEncryptionWindow()
 	ImGui::SameLine(0, 80); 
 	ImGui::BeginGroup();
 
+	EmptySpace(0, (float)(m_Data.Width / 8) - 50);
 	if (ImGui::Button("Encrypt!"))
 		dispatcher->startEvent({ true,1 });
+	EmptySpace(0, 5);
 	if (ImGui::Button("Decrypt!"))
 		dispatcher->startEvent({ true,2 });
+	EmptySpace(0, 5);
 	if (ImGui::Button("<-------"))
 		dispatcher->startEvent({ true,3 });
 
@@ -251,6 +294,7 @@ void Window::DrawEncryptionWindow()
 
 
 	ImGui::End();
+	ImGui::PopStyleVar();
 }
 
 void Window::DrawHelpWindow()
