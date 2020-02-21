@@ -8,7 +8,7 @@ static const char* currentComboItem = "Encryption Algorithm";
 int currentComboIndex;
 static const int comboItemSize = 9;
 
-static const int maxTextSize = 1000;
+static const int maxTextSize = 100000;
 
 static const char* textInputLabel = "Your Text";
 char textInput[maxTextSize]  = "This is an example text.";
@@ -18,6 +18,11 @@ char textOutput[maxTextSize] = "";
 int additionalValue = 3;
 static const int maxCodeWordSize = 50;
 char codeWord[maxCodeWordSize];
+
+static const int charPixelSize = (320 / 62) + 1;
+
+bool wrapped = false;
+bool needToWrapOutput = false;
 
 #define EmptySpace(x , y) ImGui::Dummy({x,y});
 
@@ -66,6 +71,12 @@ void Window::Init(const WindowProps& props)
 	{
 		Window& windowObj = *(Window*)glfwGetWindowUserPointer(window);
 		windowObj.UpdateData(width, height);
+
+		std::string outputText = windowObj.GetOutputText();
+
+		if (wrapped)
+			WordHelper::EraseNewLines(outputText);
+		windowObj.FormatOutput(outputText);
 	});
 
 	glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
@@ -195,7 +206,8 @@ std::string Window::GetInputText()
 
 void Window::SetOutputText(std::string text)
 {
-	WordHelper::transformStringToChar(text, textOutput);
+	WordHelper::transformStringToChar(text, textOutput);	
+	ActivateOutputWrap();
 }
 
 void Window::UpdateData(int width, int heigth)
@@ -218,6 +230,29 @@ std::string Window::GetCodeWord()
 int Window::GetAdditionalValue()
 {
 	return additionalValue;
+}
+
+void Window::ActivateOutputWrap()
+{
+	needToWrapOutput = true;
+	wrapped = true;
+}
+
+char* Window::GetOutputText()
+{
+	return textOutput;
+}
+
+void Window::FormatOutput(std::string ToFormat)
+{
+	if (ToFormat != "")
+		strcpy(textOutput, ToFormat.c_str());
+
+	std::string text = textOutput;
+	std::vector<std::string> splittedText = WordHelper::SplitText(text);
+
+	text = WordHelper::SolveWordWrap(splittedText, m_Data.Width / 4 / charPixelSize);
+	WordHelper::transformStringToChar(text, textOutput);
 }
 
 void Window::DrawEncryptionWindow()
@@ -265,12 +300,17 @@ void Window::DrawEncryptionWindow()
 
 	EmptySpace(0, 20);
 
-	//if certain algorithm then add textinput(or intInput if possible) in same line
-
 	// would need an int to store last position of bool array
 	// another button, which when clicked adds a true to a bool[] and remove for opposite
 	// add button disable if last possible position, disable remove at first position
 	// checks bool[] and then add accordingly the amount of additional combo boxes
+
+	// omly wrap the output if it has changed
+	if (needToWrapOutput)
+	{
+		FormatOutput();
+		needToWrapOutput = false;
+	}
 
 	ImGui::InputTextMultiline(textInputLabel, textInput, maxTextSize, { (float)(m_Data.Width / 2) - 200, (float)(m_Data.Width / 4) });
 	ImGui::SameLine(0, 80); 
@@ -291,7 +331,6 @@ void Window::DrawEncryptionWindow()
 	
 	ImGui::SameLine(0, 80);
 	ImGui::InputTextMultiline(textOutputLabel, textOutput, maxTextSize, { (float)(m_Data.Width / 2) - 200, (float)(m_Data.Width / 4) }, ImGuiInputTextFlags_ReadOnly);
-
 
 	ImGui::End();
 	ImGui::PopStyleVar();

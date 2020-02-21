@@ -53,6 +53,9 @@ public:
 	void SwitchText();
 	std::string GetCodeWord();
 	int GetAdditionalValue();
+	void ActivateOutputWrap();
+
+	char* GetOutputText();
 
 private:
 
@@ -72,4 +75,5 @@ private:
 
 	void DrawEncryptionWindow();
 	void DrawHelpWindow();
+	void FormatOutput(std::string ToFormat = "");
 };
