@@ -8,18 +8,14 @@ static const char* currentComboItem = "Encryption Algorithm";
 int currentComboIndex;
 static const int comboItemSize = 9;
 
-static const int maxTextSize = 100000;
+InputData input = InputData("Your text", "This is an example Text.\nHello second line.");
+InputData output = InputData("Output", "");
 
-static const char* textInputLabel = "Your Text";
-char textInput[maxTextSize]  = "This is an example text.";
-
-static const char* textOutputLabel = "Output";
-char textOutput[maxTextSize] = "";
 int additionalValue = 3;
 static const int maxCodeWordSize = 50;
 char codeWord[maxCodeWordSize];
 
-static const int charPixelSize = (320 / 62) + 1;
+static const int charPixelSize = (440 / 62) + 1;
 
 bool wrapped = false;
 bool needToWrapOutput = false;
@@ -48,6 +44,8 @@ void Window::Init(const WindowProps& props)
 	m_Data.Width = props.Width;
 	m_Data.Height = props.Height;
 
+	UpdateWidgetSizes();
+
 	const char* glsl_version = "#version 130";
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
@@ -74,8 +72,7 @@ void Window::Init(const WindowProps& props)
 
 		std::string outputText = windowObj.GetOutputText();
 
-		if (wrapped)
-			WordHelper::EraseNewLines(outputText);
+		WordHelper::EraseNewLines(outputText);
 		windowObj.FormatOutput(outputText);
 	});
 
@@ -201,25 +198,28 @@ int Window::GetCurrentComboIndex()
 
 std::string Window::GetInputText()
 {
-	return textInput;
+	WordHelper::EraseNewLines(input.text.GetContent());
+	return input.text.GetContent();
 }
 
 void Window::SetOutputText(std::string text)
 {
-	WordHelper::transformStringToChar(text, textOutput);	
+	output.text.SetContent(text);
 	ActivateOutputWrap();
 }
 
 void Window::UpdateData(int width, int heigth)
 {
 	m_Data.Width = width;
-	m_Data.Height = width;
+	m_Data.Height = heigth;
+
+	UpdateWidgetSizes();
 }
 
 void Window::SwitchText()
 {
-	strncpy(textInput, textOutput, maxTextSize);
-	strncpy(textOutput, "", maxTextSize);
+	input.text.SetContent(output.text.GetContent());
+	output.text.SetContent("");
 }
 
 std::string Window::GetCodeWord()
@@ -238,21 +238,27 @@ void Window::ActivateOutputWrap()
 	wrapped = true;
 }
 
-char* Window::GetOutputText()
+std::string Window::GetOutputText()
 {
-	return textOutput;
+	return output.text.GetContent();
+}
+
+void Window::UpdateWidgetSizes()
+{
+	input.size = { (float)(m_Data.Width / 2) - 200, (float) m_Data.Height / 2 };
+	output.size = { (float)(m_Data.Width / 2) - 200, (float) m_Data.Height / 2 };
 }
 
 void Window::FormatOutput(std::string ToFormat)
 {
 	if (ToFormat != "")
-		strcpy(textOutput, ToFormat.c_str());
+		output.text.SetContent(ToFormat);
 
-	std::string text = textOutput;
-	std::vector<std::string> splittedText = WordHelper::SplitText(text);
+	std::string text = output.text.GetContent();
+	//std::vector<std::string> splittedText = WordHelper::SplitText(text);
 
-	text = WordHelper::SolveWordWrap(splittedText, m_Data.Width / 4 / charPixelSize);
-	WordHelper::transformStringToChar(text, textOutput);
+	WordHelper::SolveWordWrap(output.text, output.size.x / charPixelSize);
+	output.text.SetContent(text);
 }
 
 void Window::DrawEncryptionWindow()
@@ -312,7 +318,7 @@ void Window::DrawEncryptionWindow()
 		needToWrapOutput = false;
 	}
 
-	ImGui::InputTextMultiline(textInputLabel, textInput, maxTextSize, { (float)(m_Data.Width / 2) - 200, (float)(m_Data.Width / 4) });
+	ImGui::InputTextMultiline(input.m_label, (char*)input.text.GetContent().c_str(), input.text.maxTextSize, input.size);
 	ImGui::SameLine(0, 80); 
 	ImGui::BeginGroup();
 
@@ -330,7 +336,7 @@ void Window::DrawEncryptionWindow()
 
 	
 	ImGui::SameLine(0, 80);
-	ImGui::InputTextMultiline(textOutputLabel, textOutput, maxTextSize, { (float)(m_Data.Width / 2) - 200, (float)(m_Data.Width / 4) }, ImGuiInputTextFlags_ReadOnly);
+	ImGui::InputTextMultiline(output.m_label, (char*)output.text.GetContent().c_str(), output.text.maxTextSize, output.size, ImGuiInputTextFlags_ReadOnly);
 
 	ImGui::End();
 	ImGui::PopStyleVar();

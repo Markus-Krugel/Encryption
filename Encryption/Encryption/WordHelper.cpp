@@ -81,16 +81,21 @@
         str = std::regex_replace(str, newlines_re, "");
     }
 
-    // from https://www.geeksforgeeks.org/word-wrap-problem-dp-19/
+    // from https://www.geeksforgeeks.org/word-wrap-problem-space-optimized-solution/
 
-    std::string WordHelper::SolveWordWrap(std::vector<std::string>& textInput, int k)
+    void WordHelper::SolveWordWrap(TextData& textInput, int k)
     {
-        int i, j;
+        // returns empty String if the input is empty
+        if (textInput.wordsLength.empty())
+        {
+            textInput.SetContent("");
+            return;
+        }
 
-        int textInputSize = textInput.size();
+        int i, j;
+        int n = textInput.wordsLength.size();
 
         std::vector<int> output;
-        output.reserve(textInputSize);
 
         // Variable to store number of 
         // characters in given line. 
@@ -103,14 +108,21 @@
         // DP table in which dp[i] represents 
         // cost of line starting with word 
         // arr[i]. 
+
         std::vector<int> dp;
-        dp.resize(textInputSize);
+        dp.reserve(n);
 
         // Array in which ans[i] store index 
         // of last word in line starting with 
         // word arr[i]. 
         std::vector<int> ans;
-        ans.resize(textInputSize);
+        ans.reserve(n);
+
+        for (size_t d = 0; d < n; d++)
+        {
+            dp.push_back(0);
+            ans.push_back(0);
+        }
 
         // If only one word is present then 
         // only one line is required. Cost 
@@ -118,19 +130,19 @@
         // of this line is zero. Ending point 
         // is also n-1 as single word is 
         // present. 
-        dp[textInputSize - 1] = 0;
-        ans[textInputSize - 1] = textInputSize - 1;
+        dp[n - 1] = 0;
+        ans[n - 1] = n - 1;
 
         // Make each word first word of line 
         // by iterating over each index in arr. 
-        for (i = textInputSize - 2; i >= 0; i--) {
+        for (i = n - 2; i >= 0; i--) {
             currlen = -1;
             dp[i] = INT_MAX;
 
             // Keep on adding words in current 
             // line by iterating from starting 
             // word upto last word in arr. 
-            for (j = i; j < textInputSize; j++) {
+            for (j = i; j < n; j++) {
 
                 // Update number of characters 
                 // in current line. arr[j] is 
@@ -138,7 +150,7 @@
                 // current word and 1 
                 // represents space character 
                 // between two words. 
-                currlen += (textInput[j].length() + 1);
+                currlen += (textInput.wordsLength[j] + 1);
 
                 // If limit of characters 
                 // is violated then no more 
@@ -156,7 +168,7 @@
                 // plus cost of putting line 
                 // breaks in rest of words 
                 // from j+1 to n-1. 
-                if (j == textInputSize - 1)
+                if (j == n - 1)
                     cost = 0;
                 else
                     cost = (k - currlen) * (k - currlen) + dp[j + 1];
@@ -174,7 +186,7 @@
         // Store starting index and ending index 
         // of words present in each line. 
         i = 0;
-        while (i < textInputSize) {
+        while (i < n) {
             output.push_back(i);
             output.push_back(ans[i]);
             i = ans[i] + 1;
@@ -183,18 +195,30 @@
         return FormatText(textInput, output);
     }
 
-    std::string WordHelper::FormatText(std::vector<std::string>& textInput, std::vector<int> formatting)
+    void WordHelper::FormatText(TextData& textInput, std::vector<int> formatting)
     {
-        std::string output;
+        std::string output = textInput.GetContent();
+        int wordPos = 0;
+        int positon = 0;
 
-        for (size_t i = 0; i < formatting.size(); i +=2)
+        for (size_t i = 0; i < formatting.size(); i += 2)
         {
-            for (size_t j = formatting[i]; j <= formatting[i+1]; j++)
+            int combinedWordLengths = 0;
+
+            int amountOfWords = formatting[i + 1] - formatting[i];
+
+            int iteration = 0;
+            do
             {
-                output.append(textInput[j]+ " ");
-            }
-            output.append("\n");
+                combinedWordLengths += textInput.wordsLength[wordPos] + 1;
+                wordPos++;
+                iteration++;
+            } while (iteration < amountOfWords);
+
+            positon += combinedWordLengths - 1;
+
+            if (positon < textInput.length)
+                output[positon] = '\n';
         }
 
-        return output;
     }

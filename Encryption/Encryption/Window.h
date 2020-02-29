@@ -28,6 +28,18 @@ struct WindowProps
 	}
 };
 
+struct InputData
+{
+	const char* m_label;
+	TextData text;
+	ImVec2 size;
+
+	InputData(const char* label,std::string newContent, ImVec2 size = {100, 100}) : m_label(label)
+	{
+		text.SetContent(newContent);
+	};
+};
+
 class Window
 {
 public:
@@ -55,7 +67,9 @@ public:
 	int GetAdditionalValue();
 	void ActivateOutputWrap();
 
-	char* GetOutputText();
+	std::string GetOutputText();
+	void UpdateWidgetSizes();
+
 
 private:
 
