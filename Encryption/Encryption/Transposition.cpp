@@ -20,7 +20,7 @@ std::string Transposition::Encode(std::string& toEncode, int columns)
 		wordList[position].push_back(toEncode.at(i));
 	}
 
-	for (size_t i = 0; i < wordList.size(); i++)
+	for (int i = 0; i < wordList.size(); i++)
 	{
 		output.append(wordList[i]);
 	}

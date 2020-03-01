@@ -35,7 +35,7 @@ std::string PolybiosCode::Decode(std::string& toDecode)
 {
 	std::string output;
 
-	for (size_t i = 0; i < toDecode.length(); i++)
+	for (int i = 0; i < toDecode.length(); i++)
 	{
 		if(isalpha(toDecode.at(i)))
 			return "Algorithm not applicable";

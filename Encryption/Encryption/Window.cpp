@@ -8,15 +8,16 @@ static const char* currentComboItem = "Encryption Algorithm";
 int currentComboIndex;
 static const int comboItemSize = 9;
 
-InputData input = InputData("Your text", "This is an example Text.\nHello second line.");
+InputData input = InputData("Your text", "This is an example Text. \nHello second line.");
 InputData output = InputData("Output", "");
 
 int additionalValue = 3;
 static const int maxCodeWordSize = 50;
 char codeWord[maxCodeWordSize];
 
-static const int charPixelSize = (440 / 62) + 1;
+static const int charPixelSize = (440 / 62);
 
+bool wrappedEnabled = true;
 bool wrapped = false;
 bool needToWrapOutput = false;
 
@@ -198,14 +199,14 @@ int Window::GetCurrentComboIndex()
 
 std::string Window::GetInputText()
 {
-	WordHelper::EraseNewLines(input.text.GetContent());
 	return input.text.GetContent();
 }
 
 void Window::SetOutputText(std::string text)
 {
 	output.text.SetContent(text);
-	ActivateOutputWrap();
+	if(wrappedEnabled)
+		ActivateOutputWrap();
 }
 
 void Window::UpdateData(int width, int heigth)
@@ -254,11 +255,8 @@ void Window::FormatOutput(std::string ToFormat)
 	if (ToFormat != "")
 		output.text.SetContent(ToFormat);
 
-	std::string text = output.text.GetContent();
-	//std::vector<std::string> splittedText = WordHelper::SplitText(text);
-
-	WordHelper::SolveWordWrap(output.text, output.size.x / charPixelSize);
-	output.text.SetContent(text);
+	WordHelper::SolveWordWrap(output.text, (output.size.x / charPixelSize) + 1);
+	output.text.SetContent(output.text.GetContent());
 }
 
 void Window::DrawEncryptionWindow()
@@ -312,17 +310,19 @@ void Window::DrawEncryptionWindow()
 	// checks bool[] and then add accordingly the amount of additional combo boxes
 
 	// omly wrap the output if it has changed
-	if (needToWrapOutput)
+	if (needToWrapOutput && wrappedEnabled)
 	{
 		FormatOutput();
 		needToWrapOutput = false;
 	}
 
 	ImGui::InputTextMultiline(input.m_label, (char*)input.text.GetContent().c_str(), input.text.maxTextSize, input.size);
-	ImGui::SameLine(0, 80); 
+	ImGui::SameLine(0, 40); 
 	ImGui::BeginGroup();
 
 	EmptySpace(0, (float)(m_Data.Width / 8) - 50);
+	ImGui::Checkbox("Word Wrapping for Output", &wrappedEnabled);
+	EmptySpace(0, 5);
 	if (ImGui::Button("Encrypt!"))
 		dispatcher->startEvent({ true,1 });
 	EmptySpace(0, 5);

@@ -9,6 +9,7 @@ struct TextData
 	std::vector<int> wordsLength;
 	int length;
 	int lines = 1;
+	bool wrapped;
 
 	std::string& GetContent()
 	{
@@ -23,7 +24,7 @@ struct TextData
 		wordsLength.clear();
 		int wordStartPos = 0;
 
-		for (size_t i = 0; i < newContent.length(); i++)
+		for (int i = 0; i < newContent.length(); i++)
 		{
 			if (newContent.at(i) == (char)' ' || newContent.at(i) == (char)'\n')
 			{
@@ -35,7 +36,6 @@ struct TextData
 				wordStartPos = i + 1;
 			}
 		}
-
 		length = newContent.length();
 		content = newContent;
 	}
@@ -55,7 +55,7 @@ public:
 
 	static void transformStringToChar(std::string& text, char* outChar);
 
-	static bool charIsVocal(char* letter);
+	static bool charIsVocal(char letter);
 
 	static bool WordOnlyContainsAandBs(std::string* toDecode);
 

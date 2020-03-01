@@ -8,7 +8,7 @@ std::string BiLanguage::Encode(std::string& toEncode)
 	{
 		output.push_back(toEncode.at(i));
 
-		if (WordHelper::charIsVocal((char*)toEncode.at(i)))
+		if (WordHelper::charIsVocal(toEncode.at(i)))
 		{
 			output.append("bi");
 		}
@@ -25,7 +25,7 @@ std::string BiLanguage::Decode(std::string& toDecode)
 	{
 		output.push_back(toDecode.at(i));
 
-		if (isalpha(toDecode.at(i)) && WordHelper::charIsVocal((char*)toDecode.at(i)))
+		if (isalpha(toDecode.at(i)) && WordHelper::charIsVocal(toDecode.at(i)))
 		{
 			if (toDecode.at(i + 1) == 'b' && tolower(toDecode.at(i + 2)) == 'i')
 				i += 2;

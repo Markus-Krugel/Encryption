@@ -6,13 +6,13 @@ std::string ULanguage::Encode(std::string& toEncode)
 	bool wordStart = true;
 	std::string output;
 
-	for (std::string::size_type i = 0; i < toEncode.length(); ++i) 
+	for (std::string::size_type i = 0; i < toEncode.length(); ++i)
 	{
 		if (wordStart)
 		{
 			wordStart = false;
 
-			if (WordHelper::charIsVocal((char*)toEncode.at(i)))
+			if (WordHelper::charIsVocal(toEncode.at(i)))
 			{
 				if (isupper(toEncode.at(i)))
 					output.append("U");
@@ -23,7 +23,7 @@ std::string ULanguage::Encode(std::string& toEncode)
 			}
 			output.append("U");
 		}
-		else if (isspace(toEncode.at(i)))
+		else if ((isspace(toEncode.at(i)) || toEncode.at(i) == '\n') && i != toEncode.length() - 1 && !(isspace(toEncode.at(i + 1)) || toEncode.at(i + 1) == '\n'))
 			wordStart = true;
 		
 		char temp = (char)(tolower(toEncode.at(i)));
@@ -39,7 +39,7 @@ std::string ULanguage::Decode(std::string& toDecode)
 	std::string output;
 	bool wordStart = true;
 
-	for (size_t i = 0; i < toDecode.length(); i++)
+	for (int i = 0; i < toDecode.length(); i++)
 	{
 		if (wordStart && tolower(toDecode.at(i)) == tolower('u'))
 		{
@@ -56,7 +56,7 @@ std::string ULanguage::Decode(std::string& toDecode)
 		}
 		else if (wordStart && tolower(toDecode.at(i)) != tolower('u'))
 			return "Algorithm not applicable";
-		else if (isspace(toDecode.at(i)))
+		else if ((isspace(toDecode.at(i)) || toDecode.at(i) == '\n') && i != toDecode.length() - 1 && !(isspace(toDecode.at(i + 1)) || toDecode.at(i + 1) == '\n'))
 			wordStart = true;
 
 		output.push_back(toDecode.at(i));

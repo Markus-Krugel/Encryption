@@ -33,21 +33,21 @@
 	}
 
 
-	bool WordHelper::charIsVocal(char* letter)
+	bool WordHelper::charIsVocal(char letter)
 	{
 		int decimalOfChar = int(letter);
 
 		if (decimalOfChar >= decimalStartUpperletter && decimalOfChar <= decimalEndUpperletter)
-			return decimalOfChar == 65 || decimalOfChar == 69 || decimalOfChar == 73|| decimalOfChar == 79 || decimalOfChar == 85;
+			return decimalOfChar == (unsigned char)'A' || decimalOfChar == (unsigned char)'E' || decimalOfChar == (unsigned char)'I' || decimalOfChar == (unsigned char)'O' || decimalOfChar == (unsigned char)'U';
 		else if (decimalOfChar >= decimalStartLowerletter && decimalOfChar <= decimalEndLowerletter)
-			return decimalOfChar == 97 || decimalOfChar == 101 || decimalOfChar == 105 || decimalOfChar == 111 || decimalOfChar == 117;
+			return decimalOfChar == (unsigned char)'a' || decimalOfChar == (unsigned char)'e' || decimalOfChar == (unsigned char)'i' || decimalOfChar == (unsigned char)'o' || decimalOfChar == (unsigned char)'u';
 
 		return false;
 	}
 
 	bool WordHelper::WordOnlyContainsAandBs(std::string* toDecode)
 	{
-		for (size_t i = 0; i < toDecode->length(); i++)
+		for (int i = 0; i < toDecode->length(); i++)
 		{
 			if (isalpha(toDecode->at(i)) && toDecode->at(i) != 'a' && toDecode->at(i) != 'b')
 				return false;
@@ -60,7 +60,7 @@
 	{
 		std::string delimiter = " ";
 
-		size_t pos = 0;
+		int pos = 0;
 		std::vector<std::string> output;
 
 		// Have a rough pre allocation
@@ -118,7 +118,7 @@
         std::vector<int> ans;
         ans.reserve(n);
 
-        for (size_t d = 0; d < n; d++)
+        for (int d = 0; d < n; d++)
         {
             dp.push_back(0);
             ans.push_back(0);
@@ -192,16 +192,17 @@
             i = ans[i] + 1;
         }
 
-        return FormatText(textInput, output);
+        FormatText(textInput, output);
     }
 
     void WordHelper::FormatText(TextData& textInput, std::vector<int> formatting)
     {
         std::string output = textInput.GetContent();
+
         int wordPos = 0;
         int positon = 0;
 
-        for (size_t i = 0; i < formatting.size(); i += 2)
+        for (int i = 0; i < formatting.size(); i += 2)
         {
             int combinedWordLengths = 0;
 
@@ -215,10 +216,12 @@
                 iteration++;
             } while (iteration < amountOfWords);
 
-            positon += combinedWordLengths - 1;
+            positon += combinedWordLengths;
 
             if (positon < textInput.length)
-                output[positon] = '\n';
+                output[positon - 1] = '\n';
         }
 
+        textInput.SetContent(output);
+        textInput.wrapped = true;
     }
