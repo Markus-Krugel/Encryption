@@ -52,6 +52,10 @@ public:
 	inline unsigned int GetWidth() const { return m_Data.Width; }
 	inline unsigned int GetHeight() const { return m_Data.Height; }
 
+	bool wrappedEnabled = true;
+	bool wrapped = false;
+	bool needToWrapOutput = false;
+
 	// Window attributes
 	void SetVSync(bool enabled);
 	bool IsVSync() const;

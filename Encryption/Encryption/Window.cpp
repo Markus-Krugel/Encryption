@@ -17,10 +17,6 @@ char codeWord[maxCodeWordSize];
 
 static const int charPixelSize = (440 / 62);
 
-bool wrappedEnabled = true;
-bool wrapped = false;
-bool needToWrapOutput = false;
-
 #define EmptySpace(x , y) ImGui::Dummy({x,y});
 
 static void GLFWErrorCallback(int error, const char* description)
@@ -74,7 +70,8 @@ void Window::Init(const WindowProps& props)
 		std::string outputText = windowObj.GetOutputText();
 
 		WordHelper::EraseNewLines(outputText);
-		windowObj.FormatOutput(outputText);
+		if(windowObj.wrappedEnabled)
+			windowObj.FormatOutput(outputText);
 	});
 
 	glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
@@ -161,8 +158,8 @@ void Window::OnUpdate()
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
-
 	ImGui::SetNextWindowSize({(float) m_Data.Width,(float)m_Data.Width });
+	ImGui::SetNextWindowPos({ 0,0 });
 
 	// render your GUI
 	DrawEncryptionWindow();
@@ -262,7 +259,7 @@ void Window::FormatOutput(std::string ToFormat)
 void Window::DrawEncryptionWindow()
 {
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(30,0));
-	ImGui::Begin("Encryption", (bool*)0, ImGuiWindowFlags_NoDecoration);
+	ImGui::Begin("Encryption", (bool*)0, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove);
 
 	EmptySpace(0, 10);
 
@@ -287,10 +284,14 @@ void Window::DrawEncryptionWindow()
 		// change value to 2 if transposition selected as 1 would do nothíng
 		if (currentComboIndex == 7 && additionalValue == 1)
 			additionalValue = 2;
+		// if you switch from Ceaser to Transposition and value is over 10 then set it back to 10
+		if (currentComboIndex == 7 && additionalValue > 10)
+			additionalValue = 10;
 
 		ImGui::SameLine(0, 80);
 		// decided to do index -5 so that if it is transposition the minimum would be 2 and for ceaser 1
-		ImGui::SliderInt("Value", &additionalValue, currentComboIndex - 5, 10);
+		// For Transposition max is 10 for Ceaser 25
+		ImGui::SliderInt("Value", &additionalValue, currentComboIndex - 5, currentComboIndex == 6 ? 25 : 10);
 	}
 	else if (currentComboIndex == 8)
 	{

@@ -47,7 +47,7 @@ std::string Ceaser::Decode(std::string& toDecode, int moveAmount)
 			int temp = alphPos - moveAmount;
 
 			if (temp < 0)
-				output.push_back(WordHelper::getCharAtReverseAlphabetPosition(temp + 1, islower(toDecode.at(i))));
+				output.push_back(WordHelper::getCharAtAlphabetPosition(temp + 26, islower(toDecode.at(i))));
 			else
 				output.push_back(WordHelper::getCharAtAlphabetPosition(temp, islower(toDecode.at(i))));
 		}
