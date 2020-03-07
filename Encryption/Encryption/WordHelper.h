@@ -2,12 +2,14 @@
 #include <string>
 #include <vector>
 #include <regex>
+#include <algorithm>
 
 struct TextData
 {
 	static const int maxTextSize = 1000;
 	std::vector<int> wordsLength;
 
+	// !!!IMPORTANT!!! call UpdateContent if you change the content of the reference
 	std::string& GetContent()
 	{
 		return content;
@@ -24,24 +26,33 @@ struct TextData
 		return length;
 	}
 
-	void SetContent(std::string newContent)
+	void UpdateContent()
 	{
-		if (newContent == content)
-			return;
-
-		wordsLength.clear();
 		int wordStartPos = 0;
 
-		for (int i = 0; i < newContent.length(); i++)
+		wordsLength.clear();
+
+		for (int i = 0; i < content.length(); i++)
 		{
-			if (newContent.at(i) == (char)' ' || newContent.at(i) == (char)'\n')
+			if (content.at(i) == (char)' ' || content.at(i) == (char)'\n')
 			{
 				wordsLength.push_back(i - wordStartPos);
 				wordStartPos = i + 1;
 			}
 		}
-		length = newContent.length();
+
+		//for single words
+		if (wordsLength.empty() && content != "")
+			wordsLength.push_back(content.length());
+
+
+		length = content.length();
+	}
+
+	void SetContent(std::string newContent)
+	{
 		content = newContent;
+		UpdateContent();
 	}
 
 private:
@@ -68,7 +79,7 @@ public:
 
 	static void SolveWordWrap(TextData& textInput, int k);
 
-	static void EraseNewLines(std::string& mainStr);
+	static void EraseNewLinesAndSpaces(std::string& mainStr);
 
 private:
 	static const int decimalStartUpperletter = 65;

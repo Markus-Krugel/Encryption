@@ -57,8 +57,9 @@ void Window::Init(const WindowProps& props)
 		{
 			TextData* outputText = windowObj.GetOutputText();
 
-			WordHelper::EraseNewLines(outputText->GetContent());
-			WordHelper::SolveWordWrap(*outputText, windowObj.GetInputDataWidth() / charPixelSize);
+			WordHelper::EraseNewLinesAndSpaces(outputText->GetContent());
+			outputText->UpdateContent();
+			WordHelper::SolveWordWrap(*outputText, (windowObj.GetInputDataWidth() / charPixelSize) -2);
 		}
 	});
 
@@ -147,8 +148,9 @@ void Window::SetOutputText(std::string text)
 
 	if (wrappedEnabled)
 	{
-		WordHelper::EraseNewLines(output.text.GetContent());
-		WordHelper::SolveWordWrap(output.text, output.size.x / charPixelSize);
+		WordHelper::EraseNewLinesAndSpaces(output.text.GetContent());
+		output.text.UpdateContent();
+		WordHelper::SolveWordWrap(output.text, (output.size.x / charPixelSize) - 2);
 		output.text.SetContent(output.text.GetContent());
 	}
 	else

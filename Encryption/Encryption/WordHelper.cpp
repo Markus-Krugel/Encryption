@@ -74,11 +74,16 @@
 		return output;
 	}
 
-    void WordHelper::EraseNewLines(std::string& str)
+    void WordHelper::EraseNewLinesAndSpaces(std::string& str)
     {
-        std::regex newlines_re("\n+");
-
-        str = std::regex_replace(str, newlines_re, "");
+        for (size_t i = 0; i < str.size(); i++)
+        {
+            // removes 
+            if (i > 0 && str[i - 1] == ' ' && (str[i] == '\n' || str[i] == ' '))
+                str.erase(i, i + 1);
+            else if (str[i] == '\n')
+                str[i] = ' ';
+        } 
     }
 
     // from https://www.geeksforgeeks.org/word-wrap-problem-space-optimized-solution/
@@ -96,6 +101,10 @@
         int n = textInput.wordsLength.size();
 
         std::vector<int> output;
+
+        // if word too long break word with --, so that you can detect word breaking 
+        // can somtimes end in an endless loop
+
 
         // Variable to store number of 
         // characters in given line. 
