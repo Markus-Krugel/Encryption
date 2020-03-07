@@ -209,19 +209,19 @@
             int amountOfWords = formatting[i + 1] - formatting[i];
 
             int iteration = 0;
-            do
+            for (iteration; iteration <= amountOfWords; iteration++)
             {
                 combinedWordLengths += textInput.wordsLength[wordPos] + 1;
                 wordPos++;
-                iteration++;
-            } while (iteration < amountOfWords);
+            }
+
 
             positon += combinedWordLengths;
 
-            if (positon < textInput.length)
+            if (positon < textInput.GetLength())
                 output[positon - 1] = '\n';
         }
 
         textInput.SetContent(output);
-        textInput.wrapped = true;
+
     }

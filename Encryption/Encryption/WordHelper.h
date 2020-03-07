@@ -7,13 +7,21 @@ struct TextData
 {
 	static const int maxTextSize = 1000;
 	std::vector<int> wordsLength;
-	int length;
-	int lines = 1;
-	bool wrapped;
 
 	std::string& GetContent()
 	{
 		return content;
+	}
+
+	int GetLength()
+	{
+		// length could be wrong as you can change the content via the getContent function, alternative would be for the getter to return
+		// a copy, would be too costly for long strings
+
+		if (length != content.size())
+			length = content.size();
+
+		return length;
 	}
 
 	void SetContent(std::string newContent)
@@ -28,10 +36,6 @@ struct TextData
 		{
 			if (newContent.at(i) == (char)' ' || newContent.at(i) == (char)'\n')
 			{
-				// add a new line unless it is the last char of the string
-				if (newContent.at(i) == (char)'\n' && i != newContent.length() - 1)
-					lines++;
-
 				wordsLength.push_back(i - wordStartPos);
 				wordStartPos = i + 1;
 			}
@@ -42,6 +46,7 @@ struct TextData
 
 private:
 	std::string content;
+	int length;
 };
 
 class WordHelper

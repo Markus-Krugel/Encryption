@@ -12,6 +12,7 @@
 #include <functional>
 #include "WordHelper.h"
 #include "EventDispatcher.h"
+#include "vendor/imgui/misc/cpp/imgui_stdlib.h"
 
 
 struct WindowProps
@@ -37,7 +38,7 @@ struct InputData
 	InputData(const char* label,std::string newContent, ImVec2 size = {100, 100}) : m_label(label)
 	{
 		text.SetContent(newContent);
-	};
+	}
 };
 
 class Window
@@ -53,8 +54,6 @@ public:
 	inline unsigned int GetHeight() const { return m_Data.Height; }
 
 	bool wrappedEnabled = true;
-	bool wrapped = false;
-	bool needToWrapOutput = false;
 
 	// Window attributes
 	void SetVSync(bool enabled);
@@ -69,11 +68,10 @@ public:
 	void SwitchText();
 	std::string GetCodeWord();
 	int GetAdditionalValue();
-	void ActivateOutputWrap();
 
-	std::string GetOutputText();
+	TextData* GetOutputText();
 	void UpdateWidgetSizes();
-
+	int GetInputDataWidth();
 
 private:
 
@@ -88,10 +86,25 @@ private:
 	WindowData m_Data;
 	std::shared_ptr<EventDispatcher> dispatcher;
 
+	bool s_GLFWInitialized;
+
+	const char* comboItems[9] = { "Atbasch", "BiLanguage", "Ror Language", "U Language","Bacon Code",  "Polybios Code", "Ceaser Cipher", "Transposition", "Vigenere Cipher" };
+	const char* currentComboItem;
+	int currentComboIndex = -1;
+	static const int comboItemSize = 9;
+
+	InputData input = InputData("Your text", "This is an example Text. \nHello second line.");
+	InputData output = InputData("Output", "");
+
+	int additionalValue = 3;
+	static const int maxCodeWordSize = 50;
+	char codeWord[maxCodeWordSize];
+
+	static const int charPixelSize = (440 / 62);
+
 	void Init(const WindowProps& props);
 	void Shutdown();
 
 	void DrawEncryptionWindow();
 	void DrawHelpWindow();
-	void FormatOutput(std::string ToFormat = "");
 };

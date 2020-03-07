@@ -164,6 +164,7 @@
     <ClCompile Include="vendor\imgui\imgui_demo.cpp" />
     <ClCompile Include="vendor\imgui\imgui_draw.cpp" />
     <ClCompile Include="vendor\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="vendor\imgui\misc\cpp\imgui_stdlib.cpp" />
     <ClCompile Include="VigenereCipher.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WordHelper.cpp" />
@@ -194,6 +195,7 @@
     <ClInclude Include="vendor\imgui\imstb_rectpack.h" />
     <ClInclude Include="vendor\imgui\imstb_textedit.h" />
     <ClInclude Include="vendor\imgui\imstb_truetype.h" />
+    <ClInclude Include="vendor\imgui\misc\cpp\imgui_stdlib.h" />
     <ClInclude Include="VigenereCipher.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="WordHelper.h" />

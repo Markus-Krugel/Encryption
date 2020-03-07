@@ -28,7 +28,7 @@ private:
 	std::shared_ptr<EventDispatcher> dispatcher = std::make_shared<EventDispatcher>();
 	FileManager fileManager;
 
-	void handleEvent(int eventID);
+	void handleEvent(EventID id);
 
 	void onEncryptEvent();
 

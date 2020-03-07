@@ -78,6 +78,9 @@
     <ClCompile Include="FileManager.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="vendor\imgui\misc\cpp\imgui_stdlib.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EncryptCommand.h">
@@ -162,6 +165,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="VigenereCipher.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\imgui\misc\cpp\imgui_stdlib.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>

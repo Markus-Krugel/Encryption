@@ -1,8 +1,41 @@
 #include "Application.h"
 
+// added for optimization later on
+
+// struct AllocationMetrics
+// {
+// 	uint32_t TotalAllocated;
+// 	uint32_t TotalFreed;
+// 
+// 	uint32_t CurrentUsage() { return TotalAllocated - TotalFreed; };
+// };
+// 
+// AllocationMetrics dbg_metrics;
+// 
+// void* operator new(size_t size)
+// {
+// 	dbg_metrics.TotalAllocated += size;
+// 	return malloc(size);
+// }
+// 
+// void operator delete(void* memory, size_t size)
+// {
+// 	dbg_metrics.TotalFreed += size;
+// 	free(memory);
+// }
+// 
+
+
 void Application::onEncryptEvent()
 {
 	int newAlgorithm = m_Window->GetCurrentComboIndex();
+
+	// Return if no algorithm chosen
+	if (newAlgorithm == -1)
+	{
+		m_Window->SetOutputText("Select an algorithm !");
+		return;
+	}
 
 	std::string currentInput = m_Window->GetInputText();
 
@@ -12,37 +45,7 @@ void Application::onEncryptEvent()
 		std::string encoded = algorithm->Encode(currentInput);
 		m_Window->SetOutputText(encoded);
 	}
-	// for more advanced algorithms with two inputs
-	else if (currentAlgorithm > 5)
-	{
-		if (currentAlgorithm != newAlgorithm)
-		{
-			currentAlgorithm = newAlgorithm;
-			onAlgorithmChangedEvent(currentAlgorithm);
-		}
-
-		int additionalValue = m_Window->GetAdditionalValue();
-		std::string encoded;
-
-		if (currentAlgorithm == 6)
-		{
-			Ceaser ceaser = dynamic_cast<Ceaser&>(*algorithm);
-			encoded = ceaser.Encode(currentInput, additionalValue);
-		}
-		else if(currentAlgorithm == 7)
-		{
-			Transposition trans = dynamic_cast<Transposition&>(*algorithm);
-			encoded = trans.Encode(currentInput, additionalValue);
-		}
-		else
-		{
-			std::string codeword = m_Window->GetCodeWord();
-			VigenereCipher vig = dynamic_cast<VigenereCipher&>(*algorithm);
-			encoded = vig.Encode(currentInput, codeword);
-		}
-		m_Window->SetOutputText(encoded);
-	}
-	// for changing to simple algorithms with one input
+	// for changing to another algorithm or using complex algorithm
 	else
 	{
 		onAlgorithmChangedEvent(newAlgorithm);
@@ -55,12 +58,48 @@ void Application::onEncryptEvent()
 			m_Window->SetOutputText(encoded);
 			std::cout << "Algorithm changed" << std::endl;
 		}
+		else
+		{
+			if (currentAlgorithm != newAlgorithm)
+			{
+				currentAlgorithm = newAlgorithm;
+				onAlgorithmChangedEvent(currentAlgorithm);
+			}
+
+			int additionalValue = m_Window->GetAdditionalValue();
+			std::string encoded;
+
+			if (currentAlgorithm == 6)
+			{
+				Ceaser ceaser = dynamic_cast<Ceaser&>(*algorithm);
+				encoded = ceaser.Encode(currentInput, additionalValue);
+			}
+			else if (currentAlgorithm == 7)
+			{
+				Transposition trans = dynamic_cast<Transposition&>(*algorithm);
+				encoded = trans.Encode(currentInput, additionalValue);
+			}
+			else
+			{
+				std::string codeword = m_Window->GetCodeWord();
+				VigenereCipher vig = dynamic_cast<VigenereCipher&>(*algorithm);
+				encoded = vig.Encode(currentInput, codeword);
+			}
+			m_Window->SetOutputText(encoded);
+		}
 	}
 }
 
 void Application::onDecryptEvent()
 {
 	int newAlgorithm = m_Window->GetCurrentComboIndex();
+
+	// Return if no algorithm chosen
+	if (newAlgorithm == -1)
+	{
+		m_Window->SetOutputText("Select an algorithm !");
+		return;
+	}
 
 	std::string currentInput = m_Window->GetInputText();
 
@@ -70,38 +109,7 @@ void Application::onDecryptEvent()
 		std::string decoded = algorithm->Decode(currentInput);
 		m_Window->SetOutputText(decoded);
 	}
-	// for more advanced algorithms with two inputs
-	else if (currentAlgorithm > 5)
-	{
-		if (currentAlgorithm != newAlgorithm)
-		{
-			currentAlgorithm = newAlgorithm;
-			onAlgorithmChangedEvent(currentAlgorithm);
-		}
-
-		int additionalValue = m_Window->GetAdditionalValue();
-
-		std::string decoded;
-
-		if (currentAlgorithm == 6)
-		{
-			Ceaser ceaser = dynamic_cast<Ceaser&>(*algorithm);
-			decoded = ceaser.Decode(currentInput, additionalValue);
-		}
-		else if (currentAlgorithm == 7)
-		{
-			Transposition trans = dynamic_cast<Transposition&>(*algorithm);
-			decoded = trans.Decode(currentInput, additionalValue);
-		}
-		else
-		{
-			std::string codeword = m_Window->GetCodeWord();
-			VigenereCipher vig = dynamic_cast<VigenereCipher&>(*algorithm);
-			decoded = vig.Decode(currentInput, codeword);
-		}
-		m_Window->SetOutputText(decoded);
-	}
-	// for changing to simple algorithms with one input
+	// for changing to another algorithm or using complex algorithm
 	else
 	{
 		onAlgorithmChangedEvent(newAlgorithm);
@@ -113,6 +121,36 @@ void Application::onDecryptEvent()
 			std::string decoded = algorithm->Decode(currentInput);
 			m_Window->SetOutputText(decoded);
 			std::cout << "Algorithm changed" << std::endl;
+		}
+		else
+		{
+			if (currentAlgorithm != newAlgorithm)
+			{
+				currentAlgorithm = newAlgorithm;
+				onAlgorithmChangedEvent(currentAlgorithm);
+			}
+
+			int additionalValue = m_Window->GetAdditionalValue();
+
+			std::string decoded;
+
+			if (currentAlgorithm == 6)
+			{
+				Ceaser ceaser = dynamic_cast<Ceaser&>(*algorithm);
+				decoded = ceaser.Decode(currentInput, additionalValue);
+			}
+			else if (currentAlgorithm == 7)
+			{
+				Transposition trans = dynamic_cast<Transposition&>(*algorithm);
+				decoded = trans.Decode(currentInput, additionalValue);
+			}
+			else
+			{
+				std::string codeword = m_Window->GetCodeWord();
+				VigenereCipher vig = dynamic_cast<VigenereCipher&>(*algorithm);
+				decoded = vig.Decode(currentInput, codeword);
+			}
+			m_Window->SetOutputText(decoded);
 		}
 	}
 }
@@ -163,34 +201,36 @@ void Application::Run()
 		data = dispatcher->hasEventStarted();
 		if (data.hasEventStarted)
 		{
-			handleEvent(data.EventID);
+			handleEvent(data.id);
 		}
 	}
 
 	delete m_Window;
+
+
+	//std::cout << dbg_metrics.CurrentUsage() << std::endl;
+
 }
 
 
-void Application::handleEvent(int eventID)
+void Application::handleEvent(EventID id)
 {
 
-	std::cout << eventID << std::endl;
-	
-	switch (eventID)
+	switch (id)
 	{
-	case 0:
+	case WindowCloseEvent:
 		isRunning = false;
 		break;
-	case 1:
+	case EncryptionEvent:
 		onEncryptEvent();
 		break;
-	case 2:
+	case DecryptionEvent:
 		onDecryptEvent();
 		break;
-	case 3:
+	case SwitchTextEvent:
 		m_Window->SwitchText();
 		break;
 	}
 
-	dispatcher->handledEvent(eventID);
+	dispatcher->handledEvent(id);
 }

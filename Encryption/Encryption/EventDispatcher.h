@@ -1,14 +1,23 @@
 #pragma once
 
+enum EventID
+{
+	NoEvent,
+	WindowCloseEvent,
+	EncryptionEvent,
+	DecryptionEvent,
+	SwitchTextEvent
+};
+
 struct EventData
 {
 	bool hasEventStarted;
-	int EventID;
+	EventID id;
 
 	void resetData()
 	{
 		hasEventStarted = false;
-		EventID = -1 ;
+		id = NoEvent;
 	}
 };
 
@@ -17,9 +26,9 @@ class EventDispatcher
 public:
 	inline EventData hasEventStarted() { return data; };
 	void startEvent(EventData eventData) { data = eventData; }
-	void handledEvent(int eventID)
+	void handledEvent(EventID eventID)
 	{
-		if (eventID == data.EventID)
+		if (eventID == data.id)
 			data.resetData();
 	};
 private:

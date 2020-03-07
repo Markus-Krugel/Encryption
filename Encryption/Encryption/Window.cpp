@@ -1,22 +1,6 @@
 #include "Window.h"
 #pragma warning(disable : 4996)
 
-static bool s_GLFWInitialized = false;
-
-const char* comboItems[] = {"Atbasch", "BiLanguage", "Ror Language", "U Language","Bacon Code",  "Polybios Code", "Ceaser Cipher", "Transposition", "Vigenere Cipher" };
-static const char* currentComboItem = "Encryption Algorithm";
-int currentComboIndex;
-static const int comboItemSize = 9;
-
-InputData input = InputData("Your text", "This is an example Text. \nHello second line.");
-InputData output = InputData("Output", "");
-
-int additionalValue = 3;
-static const int maxCodeWordSize = 50;
-char codeWord[maxCodeWordSize];
-
-static const int charPixelSize = (440 / 62);
-
 #define EmptySpace(x , y) ImGui::Dummy({x,y});
 
 static void GLFWErrorCallback(int error, const char* description)
@@ -40,6 +24,8 @@ void Window::Init(const WindowProps& props)
 	m_Data.Title = props.Title;
 	m_Data.Width = props.Width;
 	m_Data.Height = props.Height;
+
+	currentComboItem = "Encryption Algorithm";
 
 	UpdateWidgetSizes();
 
@@ -67,67 +53,22 @@ void Window::Init(const WindowProps& props)
 		Window& windowObj = *(Window*)glfwGetWindowUserPointer(window);
 		windowObj.UpdateData(width, height);
 
-		std::string outputText = windowObj.GetOutputText();
+		if (windowObj.wrappedEnabled)
+		{
+			TextData* outputText = windowObj.GetOutputText();
 
-		WordHelper::EraseNewLines(outputText);
-		if(windowObj.wrappedEnabled)
-			windowObj.FormatOutput(outputText);
+			WordHelper::EraseNewLines(outputText->GetContent());
+			WordHelper::SolveWordWrap(*outputText, windowObj.GetInputDataWidth() / charPixelSize);
+		}
 	});
 
 	glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
 	{
 		Window& windowObj = *(Window*)glfwGetWindowUserPointer(window);
-		windowObj.dispatcher->startEvent({ true,0 });
+		windowObj.dispatcher->startEvent({ true, WindowCloseEvent });
 	});
 
-	glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int scancode, int action, int mods)
-	{
-		switch (action)
-		{
-		case GLFW_PRESS:
-		{
-			break;
-		}
-		case GLFW_RELEASE:
-		{
-			break;
-		}
-		case GLFW_REPEAT:
-		{
-			break;
-		}
-		}
-	});
-
-	glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int keycode)
-	{
-
-	});
-
-	glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)
-	{
-		switch (action)
-		{
-		case GLFW_PRESS:
-		{
-			break;
-		}
-		case GLFW_RELEASE:
-		{
-			break;
-		}
-		}
-	});
-
-	glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset)
-	{
-		
-	});
-
-	glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos)
-	{
-		
-	});
+	glfwSetWindowSizeLimits(m_Window, 800, 300, GLFW_DONT_CARE, GLFW_DONT_CARE);
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -201,9 +142,17 @@ std::string Window::GetInputText()
 
 void Window::SetOutputText(std::string text)
 {
-	output.text.SetContent(text);
-	if(wrappedEnabled)
-		ActivateOutputWrap();
+	if (text != output.text.GetContent())
+		output.text.SetContent(text);
+
+	if (wrappedEnabled)
+	{
+		WordHelper::EraseNewLines(output.text.GetContent());
+		WordHelper::SolveWordWrap(output.text, output.size.x / charPixelSize);
+		output.text.SetContent(output.text.GetContent());
+	}
+	else
+		output.text.SetContent(text);
 }
 
 void Window::UpdateData(int width, int heigth)
@@ -216,7 +165,13 @@ void Window::UpdateData(int width, int heigth)
 
 void Window::SwitchText()
 {
-	input.text.SetContent(output.text.GetContent());
+	auto text = output.text.GetContent();
+
+	// Return if output is empty
+	if (text == "")
+		return;
+
+	input.text.SetContent(text);
 	output.text.SetContent("");
 }
 
@@ -230,15 +185,9 @@ int Window::GetAdditionalValue()
 	return additionalValue;
 }
 
-void Window::ActivateOutputWrap()
+TextData* Window::GetOutputText()
 {
-	needToWrapOutput = true;
-	wrapped = true;
-}
-
-std::string Window::GetOutputText()
-{
-	return output.text.GetContent();
+	return &output.text;
 }
 
 void Window::UpdateWidgetSizes()
@@ -247,13 +196,9 @@ void Window::UpdateWidgetSizes()
 	output.size = { (float)(m_Data.Width / 2) - 200, (float) m_Data.Height / 2 };
 }
 
-void Window::FormatOutput(std::string ToFormat)
+int Window::GetInputDataWidth()
 {
-	if (ToFormat != "")
-		output.text.SetContent(ToFormat);
-
-	WordHelper::SolveWordWrap(output.text, (output.size.x / charPixelSize) + 1);
-	output.text.SetContent(output.text.GetContent());
+	return output.size.x;
 }
 
 void Window::DrawEncryptionWindow()
@@ -310,14 +255,7 @@ void Window::DrawEncryptionWindow()
 	// add button disable if last possible position, disable remove at first position
 	// checks bool[] and then add accordingly the amount of additional combo boxes
 
-	// omly wrap the output if it has changed
-	if (needToWrapOutput && wrappedEnabled)
-	{
-		FormatOutput();
-		needToWrapOutput = false;
-	}
-
-	ImGui::InputTextMultiline(input.m_label, (char*)input.text.GetContent().c_str(), input.text.maxTextSize, input.size);
+	ImGui::InputTextMultiline(input.m_label, &input.text.GetContent(), input.size);
 	ImGui::SameLine(0, 40); 
 	ImGui::BeginGroup();
 
@@ -325,19 +263,23 @@ void Window::DrawEncryptionWindow()
 	ImGui::Checkbox("Word Wrapping for Output", &wrappedEnabled);
 	EmptySpace(0, 5);
 	if (ImGui::Button("Encrypt!"))
-		dispatcher->startEvent({ true,1 });
+	{
+		dispatcher->startEvent({ true, EncryptionEvent});
+	}
 	EmptySpace(0, 5);
 	if (ImGui::Button("Decrypt!"))
-		dispatcher->startEvent({ true,2 });
+	{
+		dispatcher->startEvent({ true, DecryptionEvent });
+	}
 	EmptySpace(0, 5);
 	if (ImGui::Button("<-------"))
-		dispatcher->startEvent({ true,3 });
+		dispatcher->startEvent({ true, SwitchTextEvent });
 
 	ImGui::EndGroup();
 
 	
 	ImGui::SameLine(0, 80);
-	ImGui::InputTextMultiline(output.m_label, (char*)output.text.GetContent().c_str(), output.text.maxTextSize, output.size, ImGuiInputTextFlags_ReadOnly);
+	ImGui::InputTextMultiline(output.m_label, &output.text.GetContent(), output.size, ImGuiInputTextFlags_ReadOnly);
 
 	ImGui::End();
 	ImGui::PopStyleVar();
