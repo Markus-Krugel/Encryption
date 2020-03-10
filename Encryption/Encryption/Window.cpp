@@ -148,7 +148,8 @@ void Window::SetOutputText(std::string text)
 
 	if (wrappedEnabled)
 	{
-		WordHelper::EraseNewLinesAndSpaces(output.text.GetContent());
+		// do not erase unneccassary spaces if you use tansposition as it alters the result
+		WordHelper::EraseNewLinesAndSpaces(output.text.GetContent(), currentComboIndex == 7 ? false : true);
 		output.text.UpdateContent();
 		WordHelper::SolveWordWrap(output.text, (output.size.x / charPixelSize) - 2);
 		output.text.SetContent(output.text.GetContent());
@@ -261,7 +262,7 @@ void Window::DrawEncryptionWindow()
 	ImGui::SameLine(0, 40); 
 	ImGui::BeginGroup();
 
-	EmptySpace(0, (float)(m_Data.Width / 8) - 50);
+	EmptySpace(0, (float)m_Data.Height / 11);
 	ImGui::Checkbox("Word Wrapping for Output", &wrappedEnabled);
 	EmptySpace(0, 5);
 	if (ImGui::Button("Encrypt!"))

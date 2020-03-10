@@ -74,12 +74,12 @@
 		return output;
 	}
 
-    void WordHelper::EraseNewLinesAndSpaces(std::string& str)
+    void WordHelper::EraseNewLinesAndSpaces(std::string& str, bool eraseUnnecessarySpaces)
     {
         for (size_t i = 0; i < str.size(); i++)
         {
             // removes 
-            if (i > 0 && str[i - 1] == ' ' && (str[i] == '\n' || str[i] == ' '))
+            if (eraseUnnecessarySpaces && i > 0 && str[i - 1] == ' ' && (str[i] == '\n' || str[i] == ' '))
                 str.erase(i, i + 1);
             else if (str[i] == '\n')
                 str[i] = ' ';
@@ -102,7 +102,6 @@
 
         std::vector<int> output;
 
-        // if word too long break word with --, so that you can detect word breaking 
         // can somtimes end in an endless loop
 
 
@@ -118,20 +117,12 @@
         // cost of line starting with word 
         // arr[i]. 
 
-        std::vector<int> dp;
-        dp.reserve(n);
+        int* dp = new int[n];
 
         // Array in which ans[i] store index 
         // of last word in line starting with 
         // word arr[i]. 
-        std::vector<int> ans;
-        ans.reserve(n);
-
-        for (int d = 0; d < n; d++)
-        {
-            dp.push_back(0);
-            ans.push_back(0);
-        }
+        int* ans = new int[n];
 
         // If only one word is present then 
         // only one line is required. Cost 
@@ -165,7 +156,9 @@
                 // is violated then no more 
                 // words can be added to 
                 // current line. 
-                if (currlen > k)
+
+                // Unless its the same length as the previous word and therefore means that this single word is longer than the line
+                if (currlen > k && currlen != textInput.wordsLength[j])
                     break;
 
                 // If current word that is 
@@ -200,6 +193,9 @@
             output.push_back(ans[i]);
             i = ans[i] + 1;
         }
+
+        delete[] dp;
+        delete[] ans;
 
         FormatText(textInput, output);
     }

@@ -1,31 +1,5 @@
 #include "Application.h"
 
-// added for optimization later on
-
-// struct AllocationMetrics
-// {
-// 	uint32_t TotalAllocated;
-// 	uint32_t TotalFreed;
-// 
-// 	uint32_t CurrentUsage() { return TotalAllocated - TotalFreed; };
-// };
-// 
-// AllocationMetrics dbg_metrics;
-// 
-// void* operator new(size_t size)
-// {
-// 	dbg_metrics.TotalAllocated += size;
-// 	return malloc(size);
-// }
-// 
-// void operator delete(void* memory, size_t size)
-// {
-// 	dbg_metrics.TotalFreed += size;
-// 	free(memory);
-// }
-// 
-
-
 void Application::onEncryptEvent()
 {
 	int newAlgorithm = m_Window->GetCurrentComboIndex();

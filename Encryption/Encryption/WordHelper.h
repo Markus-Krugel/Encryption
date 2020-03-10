@@ -79,7 +79,7 @@ public:
 
 	static void SolveWordWrap(TextData& textInput, int k);
 
-	static void EraseNewLinesAndSpaces(std::string& mainStr);
+	static void EraseNewLinesAndSpaces(std::string& mainStr, bool eraseUnnecessarySpaces = true);
 
 private:
 	static const int decimalStartUpperletter = 65;
