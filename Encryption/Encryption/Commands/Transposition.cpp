@@ -13,6 +13,7 @@ std::string Transposition::Encode(std::string& toEncode, int columns)
 	std::vector<std::string> wordList;
 	wordList.resize(columns);
 
+	// splits the text into the different columns
 	for (std::string::size_type i = 0; i < toEncode.length(); ++i)
 	{
 		int position = i % columns;
@@ -50,10 +51,7 @@ std::string Transposition::Decode(std::string& toDecode, int columns)
 		int group = (i + extra) / groupSize;
 		int position = 0;
 
-		//if(countColumnsWithLessChar < group)
-		//	position = group + ((i % (groupSize)) * columns);
-		//else
-			position = group + (((i + extra) % groupSize) * columns);
+		position = group + (((i + extra) % groupSize) * columns);
 		
 		if(position >= toDecode.length())
 		{

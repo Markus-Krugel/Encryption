@@ -13,7 +13,7 @@ std::string VigenereCipher::Encode(std::string& toEncode, std::string& codeword)
 	if (codeword == "")
 		return "Codeword needed.";
 
-	// stores the position of the codeword so that you dont enocode non alpha chars
+	// stores the position of the codeword so that you dont encode non alpha chars
 	int codePosition = 0;
 
 	for (std::string::size_type i = 0; i < toEncode.length(); ++i)

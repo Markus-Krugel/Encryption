@@ -180,10 +180,6 @@ void Application::Run()
 	}
 
 	delete m_Window;
-
-
-	//std::cout << dbg_metrics.CurrentUsage() << std::endl;
-
 }
 
 

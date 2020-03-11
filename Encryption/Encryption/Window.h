@@ -6,8 +6,8 @@
 #include "glad.h"
 #include "glfw3.h"
 #include "imgui.h"
-#include "vendor/imgui/examples/imgui_impl_glfw.h"
-#include "vendor/imgui/examples/imgui_impl_opengl3.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 #include <string>
 #include <functional>
 #include "WordHelper.h"
@@ -56,21 +56,35 @@ public:
 	bool wrappedEnabled = true;
 
 	// Window attributes
+
 	void SetVSync(bool enabled);
-	bool IsVSync() const;
+	bool IsVSync() const ;
 
 	inline void* GetNativeWindow() const { return m_Window; }
+
+	//Gets the ID of the Encryption algorithm
 	int GetCurrentComboIndex();
+	// Gets the user Input for the Encryption
 	std::string GetInputText();
 
+	// Sets the result text
 	void SetOutputText(std::string text);
+
+	// Updates the data of the window, when the window size changes
 	void UpdateData(int width, int heigth);
+
+	// Switches the input text with the output text
 	void SwitchText();
+
+	// Get the codeword needed for Vigenere
 	std::string GetCodeWord();
+
+	// Get thed additional number needed for ceaser and transposition
 	int GetAdditionalValue();
 
+	// Gets the output text
 	TextData* GetOutputText();
-	void UpdateWidgetSizes();
+
 	int GetInputDataWidth();
 
 private:
@@ -88,22 +102,23 @@ private:
 
 	bool s_GLFWInitialized;
 
-	const char* comboItems[9] = { "Atbasch", "BiLanguage", "Ror Language", "U Language","Bacon Code",  "Polybios Code", "Ceaser Cipher", "Transposition", "Vigenere Cipher" };
+	static const int comboItemSize = 9;
+	const char* comboItems[comboItemSize] = { "Atbasch", "BiLanguage", "Ror Language", "U Language","Bacon Code",  "Polybios Code", "Ceaser Cipher", "Transposition", "Vigenere Cipher" };
 	const char* currentComboItem;
 	int currentComboIndex = -1;
-	static const int comboItemSize = 9;
 
-	InputData input = InputData("Your text", "This is an example Text. \nHello second line.");
+	InputData input = InputData("Your text", "This is an example Text.");
 	InputData output = InputData("Output", "");
 
 	int additionalValue = 3;
 	static const int maxCodeWordSize = 50;
 	char codeWord[maxCodeWordSize];
 
+	// this programm does not need different fonts and therefore dont need dynamic calculation
 	static const int charPixelSize = (440 / 62);
 
+	void UpdateWidgetSizes();
 	void Init(const WindowProps& props);
-	void Shutdown();
 
 	void DrawEncryptionWindow();
 	void DrawHelpWindow();

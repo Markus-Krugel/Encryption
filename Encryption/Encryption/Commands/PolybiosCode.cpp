@@ -37,10 +37,11 @@ std::string PolybiosCode::Decode(std::string& toDecode)
 
 	for (int i = 0; i < toDecode.length(); i++)
 	{
+		// if there is a letter it means that it wasnt encrypted with polybios
 		if(isalpha(toDecode.at(i)))
 			return "Algorithm not applicable";
 
-		if (isdigit(toDecode.at(i)) && isdigit(toDecode.at(i + 1)))
+		if (i != toDecode.length() -1 && isdigit(toDecode.at(i)) && isdigit(toDecode.at(i + 1)))
 		{
 			// the -'0' casts the char into an int otherwise it would read the ascii code
 			int position = (((toDecode.at(i) - '0') - 1) * 5) + (toDecode.at(i + 1) - '0') - 1;

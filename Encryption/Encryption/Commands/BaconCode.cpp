@@ -53,6 +53,7 @@ std::string BaconCode::Decode(std::string& toDecode)
 
 	if(!WordHelper::WordOnlyContainsAandBs(&toDecode))
 		return "Algorithm not applicable";
+
 	else
 	{
 		for (std::string::size_type i = 0; i < toDecode.length(); i ++)

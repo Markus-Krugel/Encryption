@@ -16,9 +16,12 @@ Window::Window(const WindowProps& props, std::shared_ptr<EventDispatcher> dispat
 
 Window::~Window()
 {
-	Shutdown();
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 }
 
+// Inititalizes glfw and dear imgui window
 void Window::Init(const WindowProps& props)
 {
 	m_Data.Title = props.Title;
@@ -28,6 +31,8 @@ void Window::Init(const WindowProps& props)
 	currentComboItem = "Encryption Algorithm";
 
 	UpdateWidgetSizes();
+
+	// glfw initialization
 
 	const char* glsl_version = "#version 130";
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -53,13 +58,14 @@ void Window::Init(const WindowProps& props)
 		Window& windowObj = *(Window*)glfwGetWindowUserPointer(window);
 		windowObj.UpdateData(width, height);
 
+		// recalculate word wrapping when window sizes changes
 		if (windowObj.wrappedEnabled)
 		{
 			TextData* outputText = windowObj.GetOutputText();
 
 			WordHelper::EraseNewLinesAndSpaces(outputText->GetContent());
 			outputText->UpdateContent();
-			WordHelper::SolveWordWrap(*outputText, (windowObj.GetInputDataWidth() / charPixelSize) -2);
+			WordHelper::SolveWordWrap(*outputText, (windowObj.GetInputDataWidth() / charPixelSize) - 2);
 		}
 	});
 
@@ -71,27 +77,21 @@ void Window::Init(const WindowProps& props)
 
 	glfwSetWindowSizeLimits(m_Window, 800, 300, GLFW_DONT_CARE, GLFW_DONT_CARE);
 
+	// imgui initialization
+
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO();
 	// Setup Platform/Renderer bindings
 	ImGui_ImplGlfw_InitForOpenGL(m_Window, true);
 
-	auto temp = (const char*)glGetString(GL_VERSION);
 	ImGui_ImplOpenGL3_Init(glsl_version);
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
 }
 
-void Window::Shutdown()
-{
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
-	ImGui::DestroyContext();
-}
-
 void Window::OnUpdate()
-{ 
+{
 	glfwPollEvents();
 	glClearColor(0.45f, 0.55f, 0.60f, 1.00f);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -100,7 +100,7 @@ void Window::OnUpdate()
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
-	ImGui::SetNextWindowSize({(float) m_Data.Width,(float)m_Data.Width });
+	ImGui::SetNextWindowSize({ (float)m_Data.Width,(float)m_Data.Width });
 	ImGui::SetNextWindowPos({ 0,0 });
 
 	// render your GUI
@@ -195,23 +195,24 @@ TextData* Window::GetOutputText()
 
 void Window::UpdateWidgetSizes()
 {
-	input.size = { (float)(m_Data.Width / 2) - 200, (float) m_Data.Height / 2 };
-	output.size = { (float)(m_Data.Width / 2) - 200, (float) m_Data.Height / 2 };
+	input.size = { (float)(m_Data.Width / 2) - 200, (float)m_Data.Height / 2 };
+	output.size = { (float)(m_Data.Width / 2) - 200, (float)m_Data.Height / 2 };
 }
 
 int Window::GetInputDataWidth()
 {
-	return output.size.x;
+	return input.size.x;
 }
 
 void Window::DrawEncryptionWindow()
 {
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(30,0));
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(30, 0));
 	ImGui::Begin("Encryption", (bool*)0, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove);
 
 	EmptySpace(0, 10);
 
-	if (ImGui::BeginCombo(currentComboItem, currentComboItem, ImGuiComboFlags_NoPreview))
+	// Selection for the algorithm
+ 	if (ImGui::BeginCombo(currentComboItem, currentComboItem, ImGuiComboFlags_NoPreview))
 	{
 		for (int n = 0; n < comboItemSize; n++)
 		{
@@ -227,6 +228,7 @@ void Window::DrawEncryptionWindow()
 		ImGui::EndCombo();
 	}
 
+	// add an int slider when transposition or ceaser is selected
 	if (currentComboIndex > 5 && currentComboIndex < 8)
 	{
 		// change value to 2 if transposition selected as 1 would do nothíng
@@ -241,6 +243,7 @@ void Window::DrawEncryptionWindow()
 		// For Transposition max is 10 for Ceaser 25
 		ImGui::SliderInt("Value", &additionalValue, currentComboIndex - 5, currentComboIndex == 6 ? 25 : 10);
 	}
+	// adss an inputtext for vigenere
 	else if (currentComboIndex == 8)
 	{
 		ImGui::SameLine(0, 80);
@@ -253,21 +256,17 @@ void Window::DrawEncryptionWindow()
 
 	EmptySpace(0, 20);
 
-	// would need an int to store last position of bool array
-	// another button, which when clicked adds a true to a bool[] and remove for opposite
-	// add button disable if last possible position, disable remove at first position
-	// checks bool[] and then add accordingly the amount of additional combo boxes
-
 	ImGui::InputTextMultiline(input.m_label, &input.text.GetContent(), input.size);
-	ImGui::SameLine(0, 40); 
+	ImGui::SameLine(0, 40);
 	ImGui::BeginGroup();
 
 	EmptySpace(0, (float)m_Data.Height / 11);
-	ImGui::Checkbox("Word Wrapping for Output", &wrappedEnabled);
+	ImGui::Checkbox("Enable Word Wrapping for Output", &wrappedEnabled);
+
 	EmptySpace(0, 5);
 	if (ImGui::Button("Encrypt!"))
 	{
-		dispatcher->startEvent({ true, EncryptionEvent});
+		dispatcher->startEvent({ true, EncryptionEvent });
 	}
 	EmptySpace(0, 5);
 	if (ImGui::Button("Decrypt!"))
@@ -280,7 +279,7 @@ void Window::DrawEncryptionWindow()
 
 	ImGui::EndGroup();
 
-	
+
 	ImGui::SameLine(0, 80);
 	ImGui::InputTextMultiline(output.m_label, &output.text.GetContent(), output.size, ImGuiInputTextFlags_ReadOnly);
 

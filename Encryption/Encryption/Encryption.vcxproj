@@ -71,19 +71,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)vendor\portable-file-dialogs-master;$(ProjectDir)vendor\glad\include\KHR;$(ProjectDir)vendor\glad\include\glad;$(ProjectDir)vendor\glfw\include;$(ProjectDir)vendor\imgui;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)vendor\portable-file-dialogs-master;$(ProjectDir)vendor\glad\include\KHR;$(ProjectDir)vendor\glad\include\glad;$(ProjectDir)vendor\glfw\include;$(ProjectDir)vendor\imgui;$(ProjectDir)vendor\imgui\examples;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)vendor\portable-file-dialogs-master;$(ProjectDir)vendor\glad\include\KHR;$(ProjectDir)vendor\glad\include\glad;$(ProjectDir)vendor\glfw\include;$(ProjectDir)vendor\imgui;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)vendor\portable-file-dialogs-master;$(ProjectDir)vendor\glad\include\KHR;$(ProjectDir)vendor\glad\include\glad;$(ProjectDir)vendor\glfw\include;$(ProjectDir)vendor\imgui;$(ProjectDir)vendor\imgui\examples;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)vendor\portable-file-dialogs-master;$(ProjectDir)vendor\glad\include\KHR;$(ProjectDir)vendor\glad\include\glad;$(ProjectDir)vendor\glfw\include;$(ProjectDir)vendor\imgui;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)vendor\portable-file-dialogs-master;$(ProjectDir)vendor\glad\include\KHR;$(ProjectDir)vendor\glad\include\glad;$(ProjectDir)vendor\glfw\include;$(ProjectDir)vendor\imgui;$(ProjectDir)vendor\imgui\examples;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)vendor\portable-file-dialogs-master;$(ProjectDir)vendor\glad\include\KHR;$(ProjectDir)vendor\glad\include\glad;$(ProjectDir)vendor\glfw\include;$(ProjectDir)vendor\imgui;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)vendor\portable-file-dialogs-master;$(ProjectDir)vendor\glad\include\KHR;$(ProjectDir)vendor\glad\include\glad;$(ProjectDir)vendor\glfw\include;$(ProjectDir)vendor\imgui;$(ProjectDir)vendor\imgui\examples;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -117,8 +117,8 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -134,8 +134,8 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -147,16 +147,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
-    <ClCompile Include="Atbasch.cpp" />
-    <ClCompile Include="BaconCode.cpp" />
-    <ClCompile Include="BiLanguage.cpp" />
-    <ClCompile Include="Ceaser.cpp" />
+    <ClCompile Include="Commands\Atbasch.cpp" />
+    <ClCompile Include="Commands\BaconCode.cpp" />
+    <ClCompile Include="Commands\BiLanguage.cpp" />
+    <ClCompile Include="Commands\Ceaser.cpp" />
     <ClCompile Include="FileManager.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="PolybiosCode.cpp" />
-    <ClCompile Include="RorLanguage.cpp" />
-    <ClCompile Include="Transposition.cpp" />
-    <ClCompile Include="ULanguage.cpp" />
+    <ClCompile Include="Commands\PolybiosCode.cpp" />
+    <ClCompile Include="Commands\RorLanguage.cpp" />
+    <ClCompile Include="Commands\Transposition.cpp" />
+    <ClCompile Include="Commands\ULanguage.cpp" />
     <ClCompile Include="vendor\glad\src\glad.c" />
     <ClCompile Include="vendor\imgui\examples\imgui_impl_glfw.cpp" />
     <ClCompile Include="vendor\imgui\examples\imgui_impl_opengl3.cpp" />
@@ -165,23 +165,23 @@
     <ClCompile Include="vendor\imgui\imgui_draw.cpp" />
     <ClCompile Include="vendor\imgui\imgui_widgets.cpp" />
     <ClCompile Include="vendor\imgui\misc\cpp\imgui_stdlib.cpp" />
-    <ClCompile Include="VigenereCipher.cpp" />
+    <ClCompile Include="Commands\VigenereCipher.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WordHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
-    <ClInclude Include="Atbasch.h" />
-    <ClInclude Include="BaconCode.h" />
-    <ClInclude Include="BiLanguage.h" />
-    <ClInclude Include="Ceaser.h" />
-    <ClInclude Include="EncryptCommand.h" />
+    <ClInclude Include="Commands\Atbasch.h" />
+    <ClInclude Include="Commands\BaconCode.h" />
+    <ClInclude Include="Commands\BiLanguage.h" />
+    <ClInclude Include="Commands\Ceaser.h" />
+    <ClInclude Include="Commands\EncryptCommand.h" />
     <ClInclude Include="EventDispatcher.h" />
     <ClInclude Include="FileManager.h" />
-    <ClInclude Include="PolybiosCode.h" />
-    <ClInclude Include="RorLanguage.h" />
-    <ClInclude Include="Transposition.h" />
-    <ClInclude Include="ULanguage.h" />
+    <ClInclude Include="Commands\PolybiosCode.h" />
+    <ClInclude Include="Commands\RorLanguage.h" />
+    <ClInclude Include="Commands\Transposition.h" />
+    <ClInclude Include="Commands\ULanguage.h" />
     <ClInclude Include="vendor\glad\include\glad\glad.h" />
     <ClInclude Include="vendor\glad\include\KHR\khrplatform.h" />
     <ClInclude Include="vendor\glfw\include\GLFW\glfw3.h" />
@@ -196,9 +196,12 @@
     <ClInclude Include="vendor\imgui\imstb_textedit.h" />
     <ClInclude Include="vendor\imgui\imstb_truetype.h" />
     <ClInclude Include="vendor\imgui\misc\cpp\imgui_stdlib.h" />
-    <ClInclude Include="VigenereCipher.h" />
+    <ClInclude Include="Commands\VigenereCipher.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="WordHelper.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="vendor\glfw\glfw3.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

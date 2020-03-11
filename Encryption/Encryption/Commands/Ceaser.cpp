@@ -43,7 +43,7 @@ std::string Ceaser::Decode(std::string& toDecode, int moveAmount)
 		{
 			int alphPos = WordHelper::getAlphabetPosition(toDecode.at(i));
 
-			// if it extends the last letter of the alphabet, change to the start of the alphabet
+			// if its negative, change to the end of the alphabet
 			int temp = alphPos - moveAmount;
 
 			if (temp < 0)

@@ -26,6 +26,7 @@ struct TextData
 		return length;
 	}
 
+	// Updates the length of the words and the total length
 	void UpdateContent()
 	{
 		int wordStartPos = 0;
@@ -34,17 +35,12 @@ struct TextData
 
 		for (int i = 0; i < content.length(); i++)
 		{
-			if (content.at(i) == (char)' ' || content.at(i) == (char)'\n')
+			if (content.at(i) == (char)' ' || content.at(i) == (char)'\n' || i == content.length() -1)
 			{
 				wordsLength.push_back(i - wordStartPos);
 				wordStartPos = i + 1;
 			}
 		}
-
-		//for single words
-		if (wordsLength.empty() && content != "")
-			wordsLength.push_back(content.length());
-
 
 		length = content.length();
 	}
@@ -63,22 +59,26 @@ private:
 class WordHelper
 {
 public:
+
+	// Gets the alphabet position of an letter 
 	static int getAlphabetPosition(char letter);
 
+	// gets the letter at the wanted alphabet position
 	static char getCharAtAlphabetPosition(int position, bool lowerCase);
 
+	// gets the letter at the wanted alphabet position in reverse
 	static char getCharAtReverseAlphabetPosition(int position, bool lowerCase);
-
-	static void transformStringToChar(std::string& text, char* outChar);
 
 	static bool charIsVocal(char letter);
 
+	// needed for Bacon Code
 	static bool WordOnlyContainsAandBs(std::string* toDecode);
 
-	static std::vector<std::string> SplitText(std::string& text);
+	// Wraps the text according to the maximim line size
+	static void SolveWordWrap(TextData& textInput, int linesize);
 
-	static void SolveWordWrap(TextData& textInput, int k);
-
+	// Erases (unncessary) spaces and new lines
+	// Used before word wrapping
 	static void EraseNewLinesAndSpaces(std::string& mainStr, bool eraseUnnecessarySpaces = true);
 
 private:
@@ -87,6 +87,8 @@ private:
 	static const int decimalStartLowerletter = 97;
 	static const int decimalEndLowerletter = 122;
 
+	// Adds the new lines to the text
+	// called by SolveWordWrap()
 	static void FormatText(TextData& textInput, std::vector<int> formatting);
 };
 

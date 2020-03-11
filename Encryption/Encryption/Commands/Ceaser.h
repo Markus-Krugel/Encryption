@@ -5,7 +5,6 @@
 
 // The alphabet is moved by x amount of letters.
 // e.g. for x = 3 : 'A' is 'D' and 'Z' is 'C'
-
 class Ceaser : public EncryptCommand
 {
 public:

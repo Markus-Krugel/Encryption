@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <fstream>
-#include "WordHelper.h"
+#include "../WordHelper.h"
 
 class EncryptCommand
 {

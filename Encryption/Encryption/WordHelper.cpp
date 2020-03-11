@@ -27,12 +27,6 @@
 			return decimalEndUpperletter - position;
 	}
 
-	void WordHelper::transformStringToChar(std::string& text,char* outChar)
-	{
-		strcpy(outChar, text.c_str());
-	}
-
-
 	bool WordHelper::charIsVocal(char letter)
 	{
 		int decimalOfChar = int(letter);
@@ -49,6 +43,7 @@
 	{
 		for (int i = 0; i < toDecode->length(); i++)
 		{
+            // returns false if its a letter and its neither a or b
 			if (isalpha(toDecode->at(i)) && toDecode->at(i) != 'a' && toDecode->at(i) != 'b')
 				return false;
 		}
@@ -56,31 +51,13 @@
 		return true;
 	}
 
-	std::vector<std::string> WordHelper::SplitText(std::string& text)
-	{
-		std::string delimiter = " ";
-
-		int pos = 0;
-		std::vector<std::string> output;
-
-		// Have a rough pre allocation
-		output.reserve(text.length() / 7);
-
-		while ((pos = text.find(delimiter)) != std::string::npos) {
-			output.push_back(text.substr(0, pos));
-			text.erase(0, pos + delimiter.length());
-		}
-
-		return output;
-	}
-
     void WordHelper::EraseNewLinesAndSpaces(std::string& str, bool eraseUnnecessarySpaces)
     {
         for (size_t i = 0; i < str.size(); i++)
         {
-            // removes 
+            // removes unneccessary spaces
             if (eraseUnnecessarySpaces && i > 0 && str[i - 1] == ' ' && (str[i] == '\n' || str[i] == ' '))
-                str.erase(i, i + 1);
+                str.erase(i, 1);
             else if (str[i] == '\n')
                 str[i] = ' ';
         } 
@@ -88,7 +65,7 @@
 
     // from https://www.geeksforgeeks.org/word-wrap-problem-space-optimized-solution/
 
-    void WordHelper::SolveWordWrap(TextData& textInput, int k)
+    void WordHelper::SolveWordWrap(TextData& textInput, int linesize)
     {
         // returns empty String if the input is empty
         if (textInput.wordsLength.empty())
@@ -157,8 +134,8 @@
                 // words can be added to 
                 // current line. 
 
-                // Unless its the same length as the previous word and therefore means that this single word is longer than the line
-                if (currlen > k && currlen != textInput.wordsLength[j])
+                // if its the same length as the previous word that means that this single word is longer than the line
+                if (currlen > linesize && currlen != textInput.wordsLength[j])
                     break;
 
                 // If current word that is 
@@ -173,7 +150,7 @@
                 if (j == n - 1)
                     cost = 0;
                 else
-                    cost = (k - currlen) * (k - currlen) + dp[j + 1];
+                    cost = (linesize - currlen) * (linesize - currlen) + dp[j + 1];
 
                 // Check if this arrangement gives 
                 // minimum cost for line starting 
@@ -207,6 +184,8 @@
         int wordPos = 0;
         int positon = 0;
 
+        // first position is index of the first word in the line
+        // second position the index of the last word in the line
         for (int i = 0; i < formatting.size(); i += 2)
         {
             int combinedWordLengths = 0;
@@ -216,6 +195,7 @@
             int iteration = 0;
             for (iteration; iteration <= amountOfWords; iteration++)
             {
+                // add + 1 for space after the word
                 combinedWordLengths += textInput.wordsLength[wordPos] + 1;
                 wordPos++;
             }

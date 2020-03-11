@@ -54,6 +54,7 @@ std::string ULanguage::Decode(std::string& toDecode)
 
 			continue;
 		}
+		// if the first letter of a word isnt an u it means it wasnt encrypted with uLanguage
 		else if (wordStart && tolower(toDecode.at(i)) != tolower('u'))
 			return "Algorithm not applicable";
 		else if ((isspace(toDecode.at(i)) || toDecode.at(i) == '\n') && i != toDecode.length() - 1 && !(isspace(toDecode.at(i + 1)) || toDecode.at(i + 1) == '\n'))

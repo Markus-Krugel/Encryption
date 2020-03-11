@@ -1,15 +1,15 @@
 #pragma once
 #include <iostream>
-#include "EncryptCommand.h"
-#include "ULanguage.h"
-#include "BiLanguage.h"
-#include "RorLanguage.h"
-#include "Atbasch.h"
-#include "PolybiosCode.h"
-#include "Ceaser.h"
-#include "BaconCode.h"
-#include "VigenereCipher.h"
-#include "Transposition.h"
+#include "Commands/EncryptCommand.h"
+#include "Commands/ULanguage.h"
+#include "Commands/BiLanguage.h"
+#include "Commands/RorLanguage.h"
+#include "Commands/Atbasch.h"
+#include "Commands/PolybiosCode.h"
+#include "Commands/Ceaser.h"
+#include "Commands/BaconCode.h"
+#include "Commands/VigenereCipher.h"
+#include "Commands/Transposition.h"
 
 #include "Window.h"
 #include "EventDispatcher.h";

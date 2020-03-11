@@ -4,7 +4,6 @@
 #include <vector>
 
 // Stores the word in a different order, where every x th char is grouped together
-
 class Transposition : public EncryptCommand
 {
 public:
